@@ -15,8 +15,9 @@
   "author": "",
   "license": "ISC",
   "engines": {
-    "node": "16.15.0"
-  }, 
+    "node": "16.15.0",
+    "npm": "8.5.5",
+  },
   "bugs": {
     "url": "https://github.com/YEETTTTTTT/Craftant_v2/issues"
   },
