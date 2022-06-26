@@ -104,7 +104,7 @@ export default function RegisterScreen() {
         </Form.Group>
         <Form.Group controlId="userRole">
           <div className="wrapper">
-            <input type="radio" name="userRole" id="option-1" value="buyer" checked onChange={(e) => setUserRole(e.target.value)}/>
+            <input type="radio" name="userRole" id="option-1" value="buyer" onChange={(e) => setUserRole(e.target.value)}/>
             <input type="radio" name="userRole" id="option-2" value="seller" onChange={(e) => setUserRole(e.target.value)}/>
             <Form.Label for="option-1" className="option option-1">
               <div className="dot"></div>
