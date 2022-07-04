@@ -7,6 +7,7 @@ export const generateToken = (user) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      userRole: user.userRole,
     },
     process.env.JWT_SECRET,
     {
@@ -33,5 +34,13 @@ export const isAuth = (req, res, next) => {
     );
   } else {
     res.status(401).send({message: "No Token"});
+  }
+}
+
+export const isSeller = (req, res, next) => {
+  if (req.user && req.user.userRole === 'seller') {
+    next();
+  } else {
+    res.status(401).send({message: 'Invalid User'});
   }
 }

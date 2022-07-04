@@ -53,21 +53,21 @@ export default function RegisterScreen() {
 
     if (password !== confirmPassword) {
       toast.error("Passwords do not match!");
-    }
+    } else {
+      try{
+        const {data} = await Axios.post('/api/users/register', {
+          name,
+          email,
+          password,
+          userRole,
+        });
+        ctxDispatch({type: 'USER_SIGNIN', payload: data})
+        localStorage.setItem('userInfo', JSON.stringify(data));
+        navigate(redirect || '/');
 
-    try{
-      const {data} = await Axios.post('/api/users/register', {
-        name,
-        email,
-        password,
-        userRole,
-      });
-      ctxDispatch({type: 'USER_SIGNIN', payload: data})
-      localStorage.setItem('userInfo', JSON.stringify(data));
-      navigate(redirect || '/');
-
-    } catch(err) {
-      toast.error(getError(err));
+      } catch(err) {
+        toast.error(getError(err));
+      }
     }
   };
 

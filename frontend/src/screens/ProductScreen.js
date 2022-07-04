@@ -94,10 +94,13 @@ function ProductScreen() {
                 numReviews={product.numReviews}
               ></Rating>
             </ListGroup.Item>
-            <ListGroup.Item>Price : ${product.price}</ListGroup.Item>
+            <ListGroup.Item>Price: ${product.price}</ListGroup.Item>
             <ListGroup.Item>
               Description:
               <p>{product.description}</p>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <h4>Shop: {product.shop}</h4>
             </ListGroup.Item>
           </ListGroup>
         </Col>

@@ -18,8 +18,13 @@ import PaymentMethodScreen from './screens/PaymentMethodScreen';
 import PlaceOrderScreen from './screens/PlaceOrderScreen';
 import OrderScreen from './screens/OrderScreen';
 import OrderHistoryScreen from './screens/OrderHistoryScreen';
+import BuyerRoute from './components/BuyerRoute';
 import SellerRoute from './components/SellerRoute';
 import ProfileScreen from './screens/ProfileScreen';
+import ProductListingScreen from './screens/ProductListingScreen';
+import ProductEditScreen from './screens/ProductEditScreen';
+import SearchScreen from './screens/SearchScreen';
+import DashboardScreen from './screens/DashboardScreen';
 import SearchBox from './components/SearchBox';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -71,6 +76,7 @@ function App() {
               <Navbar.Collapse id="basic-navbar-nav">
                 <SearchBox />
                 <Nav className="me-auto w-100 justify-content-end">
+                {userInfo && userInfo.userRole === 'buyer' ? (
                   <Link to="/cart" className="nav-link">
                     Cart
                     {cart.cartItems.length > 0 && (
@@ -79,14 +85,21 @@ function App() {
                       </Badge>
                     )}
                   </Link>
+                ): (
+                  null
+                )}
                   {userInfo ? (
                     <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
                       <LinkContainer to="/profile">
                         <NavDropdown.Item>User Profile</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to="/orderhistory">
-                        <NavDropdown.Item>Order History</NavDropdown.Item>
-                      </LinkContainer>
+                      {userInfo.userRole === 'buyer'? (
+                        <LinkContainer to="/orderhistory">
+                          <NavDropdown.Item>Order History</NavDropdown.Item>
+                        </LinkContainer>
+                      ): (
+                        null
+                      )}
                       <NavDropdown.Divider />
                         <Link className="dropdown-item" to="#signout" onClick={signoutHandler}>Sign Out</Link>
                     </NavDropdown>
@@ -95,22 +108,22 @@ function App() {
                     Sign In
                     </Link>
                   )}
-                  {userInfo && userInfo.isAdmin && (
+                  {userInfo && userInfo.userRole === 'seller' && (
                     <NavDropdown title="Admin" id="admin-nav-dropdown">
-                      <LinkContainer to="/dashboard">
+                      <LinkContainer to="/seller/dashboard">
                         <NavDropdown.Item>Dashboard</NavDropdown.Item>
                       </LinkContainer>
 
-                      <LinkContainer to="/productlist">
+                      <LinkContainer to="/seller/products">
                         <NavDropdown.Item>Products</NavDropdown.Item>
                       </LinkContainer>
 
-                      <LinkContainer to="/orderlist">
+                      <LinkContainer to="/seller/orderlist">
                         <NavDropdown.Item>Orders</NavDropdown.Item>
                       </LinkContainer>
 
-                      <LinkContainer to="/userlist">
-                        <NavDropdown.Item>Users</NavDropdown.Item>
+                      <LinkContainer to="/seller/shop">
+                        <NavDropdown.Item>Shop</NavDropdown.Item>
                       </LinkContainer>
                     </NavDropdown>
                   )}
@@ -138,15 +151,20 @@ function App() {
             <Routes>
               <Route path="/product/:slug" element={<ProductScreen />} />
               <Route path="/cart" element={<CartScreen />} />
+              <Route path="/search" element={<SearchScreen />} />
               <Route path="/signin" element={<SigninScreen />} />
               <Route path="/register" element={<RegisterScreen />} />
-              <Route path="/profile" element={<SellerRoute><ProfileScreen /></SellerRoute>} />
+              <Route path="/profile" element={<BuyerRoute><ProfileScreen /></BuyerRoute>} />
               <Route path="/shipping" element={<ShippingAddressScreen />} />
               <Route path="placeorder" element={<PlaceOrderScreen />} />
-              <Route path="/order/:id" element={<SellerRoute><OrderScreen /></SellerRoute>} />
-              <Route path="/orderhistory" element={<SellerRoute><OrderHistoryScreen /></SellerRoute>} />
-              <Route path="/" element={<HomeScreen />} />
+              <Route path="/order/:id" element={<BuyerRoute><OrderScreen /></BuyerRoute>} />
+              <Route path="/orderhistory" element={<BuyerRoute><OrderHistoryScreen /></BuyerRoute>} />
               <Route path="/payment" element={<PaymentMethodScreen />} />
+
+              <Route path="/seller/dashboard" element={<SellerRoute><DashboardScreen/></SellerRoute>} />
+              <Route path="/seller/products" element={<SellerRoute><ProductListingScreen/></SellerRoute>} />
+              <Route path="/seller/product/:id" element={<SellerRoute><ProductEditScreen/></SellerRoute>} />
+              <Route path="/" element={<HomeScreen />} />
             </Routes>
           </Container>
         </main>

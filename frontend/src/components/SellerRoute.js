@@ -6,5 +6,5 @@ export default function SellerRoute({children}) {
 
   const {state} = useContext(Store);
   const {userInfo} = state;
-  return userInfo ? children : <Navigate to ="/signin" />;
+  return userInfo && userInfo.userRole === 'seller' ? children : <Navigate to ="/signin" />;
 }
