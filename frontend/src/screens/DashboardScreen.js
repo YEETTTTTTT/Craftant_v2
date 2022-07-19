@@ -78,7 +78,7 @@ export default function DashboardScreen() {
                       ? summary.orders[0].totalSales.toFixed(2)
                       : 0}
                   </Card.Title>
-                  <Card.Text> Orders</Card.Text>
+                  <Card.Text> Revenue</Card.Text>
                 </Card.Body>
               </Card>
             </Col>

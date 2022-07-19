@@ -28,6 +28,7 @@ export default function ProfileScreen() {
   const { userInfo } = state;
   const [name, setName] = useState(userInfo.name);
   const [email, setEmail] = useState(userInfo.email);
+  const [shop, setShop] = useState(userInfo.shop);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -45,7 +46,7 @@ export default function ProfileScreen() {
         const { data } = await axios.put(
           '/api/users/profile',
           {
-            name, email, password,
+            name, email, password, shop
           },
           {
             headers: {Authorization: `Bearer ${userInfo.token}`},
@@ -53,7 +54,6 @@ export default function ProfileScreen() {
         );
         dispatch({type: 'UPDATE_SUCCESS'});
         ctxDispatch({type: 'USER_SIGNIN', payload: data});
-        localStorage.setItem('userInfo', JSON.stringify(data));
         toast.success('User updated successfully!');
       } catch(err) {
         dispatch({type: 'FETCH_FAIL'});
@@ -78,6 +78,20 @@ export default function ProfileScreen() {
           <Form.Label>Email</Form.Label>
           <Form.Control type="email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
         </Form.Group>
+
+        {userInfo.userRole === 'seller' && userInfo.shop === 'None' ? (
+          <Form.Group className="mb-3" controlId="shop">
+            <Form.Label>Shop Name</Form.Label>
+            <Form.Control value={shop} onChange={(e) => setShop(e.target.value)} required/>
+          </Form.Group>
+        ) : userInfo.userRole === 'seller' && userInfo.shop !== 'None' ? (
+          <Form.Group className="mb-3" controlId="shop">
+            <Form.Label>Shop Name</Form.Label>
+            <Form.Control value={shop} onChange={(e) => setShop(e.target.value)} required disabled/>
+          </Form.Group>
+        ) : (
+          null
+        )}
 
         <Form.Group className="mb-3" controlId="password">
           <Form.Label>Password</Form.Label>

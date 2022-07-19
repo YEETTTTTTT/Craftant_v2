@@ -55,21 +55,21 @@ export const ratings = [
       rating: 5,
     },
     {
-      name: '4stars & up',
+      name: '4stars',
       rating: 4,
     },
     {
-      name: '3stars & up',
+      name: '3stars',
       rating: 3,
     },
 
     {
-      name: '2stars & up',
+      name: '2stars',
       rating: 2,
     },
 
     {
-      name: '1stars & up',
+      name: '1star',
       rating: 1,
     },
 ];
@@ -181,18 +181,23 @@ export default function SearchScreen() {
           <div>
             <h3>Ratings</h3>
             <ul>
+            <li>
+              <Link
+                to={getFilterUrl({ rating: 'all' })}
+                className={rating === 'all' ? 'text-bold' : ''}
+              > Any
+              </Link>
+            </li>
               {ratings.map((r) => (
-                <li key = {r.name}>
-                  <Link className={`${r.rating}` === `${rating}` ? 'text-bold' : ''} to={getFilterUrl({rating: r.rating})}>
-                    <Rating caption={' Stars'} rating={r.rating} />
+                <li key={r.name}>
+                  <Link
+                    to={getFilterUrl({ rating: r.rating })}
+                    className={`${r.rating}` === `${rating}` ? 'text-bold' : ''}
+                  >
+                    <Rating caption={' stars'} rating={r.rating}></Rating>
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link className={rating === 'all' ? 'text-bold' : ''} to={getFilterUrl({rating: 'all'})}>
-                  <Rating caption={'No Reviews'} rating={0} />
-                </Link>
-              </li>
             </ul>
           </div>
         </Col>

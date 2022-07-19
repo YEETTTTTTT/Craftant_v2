@@ -22,7 +22,9 @@ import BuyerRoute from './components/BuyerRoute';
 import SellerRoute from './components/SellerRoute';
 import ProfileScreen from './screens/ProfileScreen';
 import ProductListingScreen from './screens/ProductListingScreen';
+import OrderHistorySellerScreen from './screens/OrderHistorySellerScreen';
 import ProductEditScreen from './screens/ProductEditScreen';
+import OrderListScreen from './screens/OrderListScreen';
 import SearchScreen from './screens/SearchScreen';
 import DashboardScreen from './screens/DashboardScreen';
 import SearchBox from './components/SearchBox';
@@ -108,6 +110,7 @@ function App() {
                     Sign In
                     </Link>
                   )}
+                  
                   {userInfo && userInfo.userRole === 'seller' && (
                     <NavDropdown title="Admin" id="admin-nav-dropdown">
                       <LinkContainer to="/seller/dashboard">
@@ -118,8 +121,12 @@ function App() {
                         <NavDropdown.Item>Products</NavDropdown.Item>
                       </LinkContainer>
 
-                      <LinkContainer to="/seller/orderlist">
+                      <LinkContainer to="/seller/orders">
                         <NavDropdown.Item>Orders</NavDropdown.Item>
+                      </LinkContainer>
+
+                      <LinkContainer to="/seller/orders/history">
+                        <NavDropdown.Item>Order History</NavDropdown.Item>
                       </LinkContainer>
 
                       <LinkContainer to="/seller/shop">
@@ -150,20 +157,22 @@ function App() {
           <Container className="mt-3">
             <Routes>
               <Route path="/product/:slug" element={<ProductScreen />} />
-              <Route path="/cart" element={<CartScreen />} />
+              <Route path="/cart" element={<BuyerRoute><CartScreen /></BuyerRoute>} />
               <Route path="/search" element={<SearchScreen />} />
               <Route path="/signin" element={<SigninScreen />} />
               <Route path="/register" element={<RegisterScreen />} />
-              <Route path="/profile" element={<BuyerRoute><ProfileScreen /></BuyerRoute>} />
-              <Route path="/shipping" element={<ShippingAddressScreen />} />
-              <Route path="placeorder" element={<PlaceOrderScreen />} />
-              <Route path="/order/:id" element={<BuyerRoute><OrderScreen /></BuyerRoute>} />
+              <Route path="/profile" element={<ProfileScreen />} />
+              <Route path="/shipping" element={<BuyerRoute><ShippingAddressScreen /></BuyerRoute>} />
+              <Route path="placeorder" element={<BuyerRoute><PlaceOrderScreen /></BuyerRoute>} />
+              <Route path="/order/:id" element={<OrderScreen />} />
               <Route path="/orderhistory" element={<BuyerRoute><OrderHistoryScreen /></BuyerRoute>} />
-              <Route path="/payment" element={<PaymentMethodScreen />} />
+              <Route path="/payment" element={<BuyerRoute><PaymentMethodScreen /></BuyerRoute>} />
 
               <Route path="/seller/dashboard" element={<SellerRoute><DashboardScreen/></SellerRoute>} />
               <Route path="/seller/products" element={<SellerRoute><ProductListingScreen/></SellerRoute>} />
+              <Route path="/seller/orders" element={<SellerRoute><OrderListScreen/></SellerRoute>} />
               <Route path="/seller/product/:id" element={<SellerRoute><ProductEditScreen/></SellerRoute>} />
+              <Route path="/seller/orders/history" element={<SellerRoute><OrderHistorySellerScreen/></SellerRoute>} />
               <Route path="/" element={<HomeScreen />} />
             </Routes>
           </Container>

@@ -9,7 +9,9 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
+import { toast } from 'react-toastify';
 
 
 function reducer(state, action) {
@@ -20,6 +22,23 @@ function reducer(state, action) {
       return { ...state, order: action.payload, loading: false, error: '' };
     case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
+    case 'PAY_REQUEST':
+      return { ...state, loadingPayment: true };
+    case 'PAY_SUCCESS':
+      return { ...state, loadingPayment: false, successPayment: true };
+    case 'PAY_FAIL':
+      return { ...state, loadingPayment: false };
+    case 'PAY_RESET':
+      return { ...state, loadingPayment: false, successPayment: false };
+    case 'DELIVER_REQUEST':
+      return { ...state, loadingDeliver: true };
+    case 'DELIVER_SUCCESS':
+      return { ...state, loadingDeliver: false, successDeliver: true };
+    case 'DELIVER_FAIL':
+      return { ...state, loadingDeliver: false, errorDeliver: action.payload };
+    case 'DELIVER_RESET':
+      return { ...state, loadingDeliver: false, successDeliver: false };
+
     default:
       return state;
   }
@@ -32,10 +51,14 @@ export default function OrderScreen() {
   const { id: orderId } = params;
   const navigate = useNavigate();
 
-  const [{loading, error, order}, dispatch] = useReducer(reducer, {
+  const [{loading, error, order, loadingPayment, successPayment, loadingDeliver, successDeliver}, dispatch] = useReducer(reducer, {
     loading: true,
     order: {},
     error: '',
+    loadingPayment: false,
+    successPayment: false,
+    loadingDeliver: false,
+    successDeliver: false,
   });
 
   useEffect(() => {
@@ -53,10 +76,45 @@ export default function OrderScreen() {
     if (!userInfo) {
       return navigate('/login');
     }
-    if (!order._id || (order._id && order._id !== orderId)) {
+    if (!order._id || successPayment || successDeliver || (order._id && order._id !== orderId)) {
       fetchOrder();
+      if (successPayment) {
+        dispatch({ type: 'PAY_RESET'});
+      }
+      if (successDeliver) {
+        dispatch({ type: 'DELIVER_RESET'});
+      }
     }
-  }, [order, userInfo, orderId, navigate]);
+  }, [order, userInfo, orderId, navigate, successPayment, successDeliver]);
+
+  async function orderPaidHandler() {
+    try {
+      dispatch({ type: 'PAY_REQUEST' });
+      const { data } = await axios.put(`/api/orders/${order._id}/payment`, {}, {
+        headers: { authorization: `Bearer ${userInfo.token}` },
+      });
+      dispatch({ type: 'PAY_SUCCESS' });
+      toast.success('Order Delivered.');
+    } catch(err) {
+      toast.error(getError(err));
+      dispatch({ type: 'PAY_FAIL' });
+    }
+  }
+
+  async function deliverOrderHandler() {
+    try {
+      dispatch({ type: 'DELIVER_REQUEST' });
+      const { data } = await axios.put(`/api/orders/${order._id}/deliver`, {}, {
+        headers: { authorization: `Bearer ${userInfo.token}` },
+      });
+      dispatch({ type: 'DELIVER_SUCCESS' });
+      toast.success('Order Delivered.');
+    } catch(err) {
+      toast.error(getError(err));
+      dispatch({ type: 'DELIVER_FAIL' });
+    }
+  }
+
   return  (
     loading? (
       <LoadingBox />
@@ -144,6 +202,26 @@ export default function OrderScreen() {
                       <Col>${order.totalPrice.toFixed(2)}</Col>
                     </Row>
                   </ListGroup.Item>
+                  {userInfo.userRole === 'buyer' && !order.isPaid && (
+                    <ListGroup.Item>
+                      {loadingPayment && <LoadingBox />}
+                      <div className="d-grid">
+                        <Button type="button" variant="light" onClick={orderPaidHandler}>
+                          Make Payment
+                        </Button>
+                      </div>
+                    </ListGroup.Item>
+                  )}
+                  {userInfo.userRole === 'seller' && order.isPaid && !order.isDelivered && (
+                    <ListGroup.Item>
+                      {loadingDeliver && <LoadingBox />}
+                      <div className="d-grid">
+                        <Button type="button" variant="light" onClick={deliverOrderHandler}>
+                          Order Delivered
+                        </Button>
+                      </div>
+                    </ListGroup.Item>
+                  )}
                 </ListGroup>
               </Card.Body>
             </Card>

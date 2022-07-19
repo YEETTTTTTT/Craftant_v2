@@ -34,6 +34,7 @@ productRouter.get('/search', expressAsyncHandler( async (req, res) => {
   const ratingFilter = rating && rating !== 'all' ? {
     rating: {
       $gte: Number(rating),
+      $lt: Number(rating)+1,
     },
   } : {};
 
@@ -76,13 +77,14 @@ productRouter.get('/search', expressAsyncHandler( async (req, res) => {
 }));
 
 productRouter.post('/', isAuth, isSeller, expressAsyncHandler(async (req, res) => {
+  console.log(req);
   const newProduct = new Product({
     name: 'sample name ' + Date.now(),
     slug: 'sample-name-' + Date.now(),
     image: '/images/cake.jpg',
     price: 0,
     category: 'sample category',
-    shop: 'sample shop',
+    shop: req.user.shop,
     stock: 0,
     rating: 0,
     numReviews: 0,
@@ -113,6 +115,42 @@ productRouter.put(
     } else {
       res.status(404).send({message: "Product Not Found"});
     }
+  })
+);
+
+productRouter.delete('/:id', isAuth, isSeller, expressAsyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (product) {
+    await product.remove();
+    res.send({message: 'Product Deleted'});
+  } else {
+    res.status(404).send({message: 'Product Not Found'});
+  }
+}));
+
+productRouter.post(
+  '/:id/reviews',
+  isAuth,
+  expressAsyncHandler(async(req, res) => {
+      const productId = req.params.id;
+      const product = await Product.findById(productId);
+      if (product) {
+        if (product.reviews.find((x) => x.name === req.user.name)) {
+          return res.status(400).send({message: 'You already left a review.'});
+        }
+        const review = {
+          name: req.user.name,
+          rating: Number(req.body.rating),
+          comment: req.body.comment,
+        };
+        product.reviews.push(review);
+        product.numReviews = product.reviews.length;
+        product. rating = product.reviews.reduce((a,c) => c.rating + a, 0) / product.reviews.length;
+        const updatedProduct = await product.save();
+        res.status(201).send({message: 'Review Created', review: updatedProduct.reviews[updatedProduct.reviews.length-1], numReviews: product.numReviews, rating: product.numReviews});
+      } else {
+        res.status(404).send({message: 'Product Not Found.'});
+      }
   })
 );
 

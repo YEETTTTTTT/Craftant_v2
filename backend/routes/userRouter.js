@@ -16,6 +16,7 @@ userRouter.post(
           _id: user._id,
           name: user.name,
           email: user.email,
+          shop: user.shop,
           isAdmin: user.isAdmin,
           userRole: user.userRole,
           token: generateToken(user),
@@ -33,6 +34,7 @@ userRouter.post(
     const newUser = new User({
       name: req.body.name,
       email: req.body.email,
+      shop: "None",
       userRole: req.body.userRole,
       password: bcrypt.hashSync(req.body.password),
     });
@@ -41,6 +43,7 @@ userRouter.post(
       _id: user._id,
       name: user.name,
       email: user.email,
+      shop: user.shop,
       isAdmin: user.isAdmin,
       userRole: user.userRole,
       token: generateToken(user),
@@ -57,6 +60,7 @@ userRouter.put(
     if (user) {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
+      user.shop = req.body.shop || user.shop;
       if (req.body.password) {
         user.password = bcrypt.hashSync(req.body.password, 8);
       }
@@ -65,6 +69,7 @@ userRouter.put(
         _id: updatedUser._id,
         name: updatedUser.name,
         email: updatedUser.email,
+        shop: updatedUser.shop,
         isAdmin: updatedUser.isAdmin,
         userRole: updatedUser.userRole,
         token: generateToken(updatedUser),

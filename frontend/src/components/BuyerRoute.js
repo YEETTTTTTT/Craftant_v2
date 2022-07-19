@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Store } from '../Store';
 
-export default function BuyerRoute({children}) {
+export default function SellerRoute({children}) {
 
   const {state} = useContext(Store);
   const {userInfo} = state;
-  return userInfo ? children : <Navigate to ="/signin" />;
+  return userInfo && userInfo.userRole === 'buyer' ? children : <Navigate to ="/signin" />;
 }

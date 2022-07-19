@@ -22,11 +22,16 @@ const reducer = (state, action) => {
   }
 };
 
+
 export default function OrderHistoryScreen() {
 
   const { state } = useContext(Store);
   const { userInfo } = state;
   const navigate = useNavigate();
+
+  console.log(userInfo._id);
+
+  const isUser = (order) => (order.user === userInfo._id)
 
   const [{loading, error, orders}, dispatch] = useReducer(reducer, {
     loading: true,
@@ -75,7 +80,7 @@ export default function OrderHistoryScreen() {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
+            {orders.filter(isUser).map((order) => (
               <tr key={order._id}>
                 <td>#{order._id}</td>
                 <td>{order.createdAt.substring(0, 10)}</td>

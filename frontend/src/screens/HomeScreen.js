@@ -22,6 +22,8 @@ const reducer = (state, action) => {
   }
 };
 
+const isAvailable = (product) => (product.stock > 0);
+
 function HomeScreen() {
   const [{ loading, error, products }, dispatch] = useReducer(logger(reducer), {
     products: [],
@@ -56,7 +58,7 @@ function HomeScreen() {
           <MessageBox variant="danger">{error}</MessageBox>
         ) : (
           <Row>
-            {products.map((product) => (
+            {products.filter(isAvailable).map((product) => (
               <Col key={product.slug} sm={6} md={4} lg={3} className="mb-3">
                 <Product product={product}></Product>
               </Col>
