@@ -22,6 +22,7 @@ orderRouter.post(
       shippingPrice: req.body.shippingPrice,
       totalPrice: req.body.totalPrice,
       user: req.user._id,
+      sellers: [],
     });
 
     const order = await newOrder.save();

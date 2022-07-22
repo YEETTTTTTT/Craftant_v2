@@ -68,6 +68,7 @@ export default function OrderScreen() {
         const { data } = await axios.get(`/api/orders/${orderId}`, {
           headers: {authorization: `Bearer ${userInfo.token}`},
         });
+
         dispatch({type: 'FETCH_SUCCESS', payload: data });
       } catch(err) {
         dispatch({type: 'FETCH_FAIL', payload: getError(err) });
@@ -172,6 +173,7 @@ export default function OrderScreen() {
                           <span>{item.quantity}</span>
                         </Col>
                         <Col md={3}>${item.price}</Col>
+
                       </Row>
                     </ListGroup.Item>
                   ))}
@@ -226,6 +228,7 @@ export default function OrderScreen() {
               </Card.Body>
             </Card>
           </Col>
+
         </Row>
       </div>
     )

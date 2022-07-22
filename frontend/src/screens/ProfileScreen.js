@@ -6,6 +6,8 @@ import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
 import { getError } from '../utils';
 import axios from 'axios';
+import LoadingBox from '../components/LoadingBox';
+import MessageBox from '../components/MessageBox';
 
 
 
@@ -17,6 +19,12 @@ const reducer = (state, action) => {
       return { ...state, loadingUpdate: false };
     case 'UPDATE_FAIL':
       return { ...state, loadingUpdate: false };
+    case 'UPLOAD_REQUEST':
+      return { ...state, loadingUpload: true, errorUpload: '' };
+    case 'UPLOAD_SUCCESS':
+      return { ...state, loadingUpload: false, errorUpload: '' };
+    case 'UPLOAD_FAIL':
+      return { ...state, loadingUpload: false, errorUpload: action.payload };
     default:
       return state;
   }
@@ -31,11 +39,15 @@ export default function ProfileScreen() {
   const [shop, setShop] = useState(userInfo.shop);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [logo, setLogo] = useState('');
+  const [description, setDescription] = useState(userInfo.description);
+  const [handmade, setHandmade] = useState('');
 
 
-  const [{ loadingUpdate }, dispatch] = useReducer(reducer, {
+  const [{ loadingUpdate, loadingUpload }, dispatch] = useReducer(reducer, {
     loadingUpdate: false,
   });
+
 
   const submitHandler = async(e) => {
     e.preventDefault();
@@ -46,7 +58,7 @@ export default function ProfileScreen() {
         const { data } = await axios.put(
           '/api/users/profile',
           {
-            name, email, password, shop
+            name, email, password, shop, description, logo, handmade
           },
           {
             headers: {Authorization: `Bearer ${userInfo.token}`},
@@ -54,6 +66,7 @@ export default function ProfileScreen() {
         );
         dispatch({type: 'UPDATE_SUCCESS'});
         ctxDispatch({type: 'USER_SIGNIN', payload: data});
+        localStorage.setItem('userInfo', JSON.stringify(data));
         toast.success('User updated successfully!');
       } catch(err) {
         dispatch({type: 'FETCH_FAIL'});
@@ -61,6 +74,28 @@ export default function ProfileScreen() {
       }
     }
   };
+
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    const bodyFormData = new FormData();
+    bodyFormData.append('file', file);
+    try {
+      dispatch({type:'UPLOAD_REQUEST'});
+      const { data } = await axios.post('/api/upload', bodyFormData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          authorization: `Bearer ${userInfo.token}`,
+        },
+      });
+      dispatch({type: 'UPLOAD_SUCCESS'});
+      toast.success('Image Uploaded Successfully');
+      setLogo(data.secure_url);
+    } catch(err) {
+      toast.error(getError(err));
+      dispatch({type: 'UPLOAD_FAIL', payload: getError(err)});
+    }
+  }
+
 
   return (
     <div className="container small-container">
@@ -73,6 +108,28 @@ export default function ProfileScreen() {
           <Form.Label>Name</Form.Label>
           <Form.Control value={name} onChange={(e) => setName(e.target.value)} required/>
         </Form.Group>
+
+        {userInfo.userRole === 'seller' && (
+          <>
+          <img
+            className="seller-logo"
+            src={userInfo.logo}
+          ></img>
+          <Form.Group className="mb-3" controlId = "imageFile">
+            <Form.Label>Shop Logo</Form.Label>
+            <Form.Control type="file" onChange={uploadFileHandler} />
+            {loadingUpload && <LoadingBox />}
+          </Form.Group>
+
+            <Form.Group className="mb-3" controlId="description">
+              <Form.Label>Shop Description</Form.Label>
+              <Form.Control
+                onChange={(e) => setDescription(e.target.value)}
+                value= {description}
+              />
+            </Form.Group>
+          </>
+        )}
 
         <Form.Group className="mb-3" controlId="email">
           <Form.Label>Email</Form.Label>

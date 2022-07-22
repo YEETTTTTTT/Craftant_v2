@@ -1,6 +1,6 @@
 import Axios from 'axios';
-import React, { useContext, useEffect, useReducer } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import CheckoutSteps from '../components/CheckoutSteps';
 import Row from 'react-bootstrap/Row';
@@ -8,6 +8,7 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Form from 'react-bootstrap/Form';
 import { Store } from '../Store';
 import { getError } from '../utils';
 import { toast } from 'react-toastify';
@@ -48,9 +49,6 @@ export default function PlaceOrderScreen() {
   const placeOrderHandler = async() => {
     try {
       dispatch({type: 'CREATE_REQUEST'});
-
-      //authentication//
-
       const { data } = await Axios.post(
         '/api/orders',
         {
@@ -67,6 +65,7 @@ export default function PlaceOrderScreen() {
           },
         }
       );
+
       ctxDispatch({type: 'CART_CLEAR'});
       dispatch({type: 'CREATE_SUCCESS'});
       localStorage.removeItem('cartItems');
@@ -77,11 +76,6 @@ export default function PlaceOrderScreen() {
     }
   };
 
-  useEffect(() => {
-    if (!cart.paymentMethod) {
-      navigate('/payment');
-    }
-  }, [cart, navigate]);
 
   return (
     <div>
@@ -129,6 +123,8 @@ export default function PlaceOrderScreen() {
                         </Col>
                         <Col md={3}>
                           ${item.price*item.quantity}
+        
+
                         </Col>
                       </Row>
                     </ListGroup.Item>
@@ -162,10 +158,10 @@ export default function PlaceOrderScreen() {
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <div className="d-grid">
-                    <Button type="button" onClick={placeOrderHandler} disabled={cart.cartItems.length === 0}>Place Order</Button>
-                  </div>
-                  {loading && <LoadingBox />}
+                    <div className="d-grid">
+                      <Button type="button" onClick={placeOrderHandler} disabled={cart.cartItems.length === 0}>Place Order</Button>
+                    </div>
+                    {loading && <LoadingBox />}
                 </ListGroup.Item>
               </ListGroup>
             </Card.Body>

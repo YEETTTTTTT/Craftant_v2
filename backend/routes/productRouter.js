@@ -2,6 +2,8 @@ import express from 'express';
 import Product from '../models/productModel.js';
 import expressAsyncHandler from 'express-async-handler';
 import { isAuth, isSeller } from '../utils.js';
+import Order from '../models/orderModel.js';
+import User from '../models/userModel.js';
 
 const productRouter = express.Router();
 
@@ -9,7 +11,6 @@ productRouter.get('/', async (req, res) => {
   const products = await Product.find();
   res.send(products);
 });
-
 
 productRouter.get('/search', expressAsyncHandler( async (req, res) => {
   const {query} = req;
@@ -77,7 +78,6 @@ productRouter.get('/search', expressAsyncHandler( async (req, res) => {
 }));
 
 productRouter.post('/', isAuth, isSeller, expressAsyncHandler(async (req, res) => {
-  console.log(req);
   const newProduct = new Product({
     name: 'sample name ' + Date.now(),
     slug: 'sample-name-' + Date.now(),
@@ -89,6 +89,8 @@ productRouter.post('/', isAuth, isSeller, expressAsyncHandler(async (req, res) =
     rating: 0,
     numReviews: 0,
     description: 'sample description',
+    user: req.user._id,
+    sales: 0
   });
   const product = await newProduct.save();
   res.send({message: 'Product Created', product });
@@ -110,6 +112,7 @@ productRouter.put(
       product.shop = req.body.shop;
       product.stock = req.body.stock;
       product.description = req.body.description;
+      product.user = req.user._id,
       await product.save();
       res.send({message: "Product Updated"});
     } else {
@@ -135,19 +138,19 @@ productRouter.post(
       const productId = req.params.id;
       const product = await Product.findById(productId);
       if (product) {
-        if (product.reviews.find((x) => x.name === req.user.name)) {
-          return res.status(400).send({message: 'You already left a review.'});
-        }
-        const review = {
-          name: req.user.name,
-          rating: Number(req.body.rating),
-          comment: req.body.comment,
-        };
-        product.reviews.push(review);
-        product.numReviews = product.reviews.length;
-        product. rating = product.reviews.reduce((a,c) => c.rating + a, 0) / product.reviews.length;
-        const updatedProduct = await product.save();
-        res.status(201).send({message: 'Review Created', review: updatedProduct.reviews[updatedProduct.reviews.length-1], numReviews: product.numReviews, rating: product.numReviews});
+          if (product.reviews.find((x) => x.name === req.user.name)) {
+            return res.status(400).send({message: 'You already left a review.'});
+          }
+          const review = {
+            name: req.user.name,
+            rating: Number(req.body.rating),
+            comment: req.body.comment,
+          };
+          product.reviews.push(review);
+          product.numReviews = product.reviews.length;
+          product.rating = product.reviews.reduce((a,c) => c.rating + a, 0) / product.reviews.length;
+          const updatedProduct = await product.save();
+          res.status(201).send({message: 'Review Created', review: updatedProduct.reviews[updatedProduct.reviews.length-1], numReviews: product.numReviews, rating: product.numReviews});
       } else {
         res.status(404).send({message: 'Product Not Found.'});
       }
@@ -176,7 +179,7 @@ productRouter.get(
 );
 
 productRouter.get('/slug/:slug', async(req, res) => {
-  const product = await Product.findOne({slug:req.params.slug});
+  const product = await Product.findOne({slug:req.params.slug}).populate('user', 'handmade');
   if (product) {
     res.send(product);
   } else {

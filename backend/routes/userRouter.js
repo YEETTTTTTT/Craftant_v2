@@ -6,6 +6,7 @@ import { generateToken, isAuth } from '../utils.js';
 
 const userRouter = express.Router();
 
+
 userRouter.post(
   '/signin',
   expressAsyncHandler(async (req, res) => {
@@ -19,6 +20,9 @@ userRouter.post(
           shop: user.shop,
           isAdmin: user.isAdmin,
           userRole: user.userRole,
+          description: user.description,
+          logo: user.logo,
+          handmade: user.handmade,
           token: generateToken(user),
         });
         return;
@@ -61,6 +65,9 @@ userRouter.put(
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
       user.shop = req.body.shop || user.shop;
+      user.handmade = req.body.handmade || user.handmade;
+      user.logo = req.body.logo || user.logo;
+      user.description = req.body.description;
       if (req.body.password) {
         user.password = bcrypt.hashSync(req.body.password, 8);
       }
@@ -72,6 +79,9 @@ userRouter.put(
         shop: updatedUser.shop,
         isAdmin: updatedUser.isAdmin,
         userRole: updatedUser.userRole,
+        handmade: updatedUser.handmade,
+        logo: updatedUser.logo,
+        description: updatedUser.description,
         token: generateToken(updatedUser),
       });
     } else {

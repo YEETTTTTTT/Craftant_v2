@@ -54,7 +54,7 @@ export default function ProductListScreen() {
   const { state } = useContext(Store);
   const { userInfo } = state;
 
-  const isShop = (product) => (product.shop === userInfo.shop)
+  const isShop = (product) => (product.shop === userInfo.shop);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -111,7 +111,7 @@ export default function ProductListScreen() {
   }
 
   return (
-    <div>
+    <div className="order-history-box">
     <Row>
       <Col>
         <h1>Products</h1>
@@ -148,7 +148,9 @@ export default function ProductListScreen() {
                   <td>#{product._id}</td>
                   <td>{product.name}</td>
                   <td>${product.price}</td>
-                  <td>{product.category}</td>
+                  <td>
+
+                  </td>
                   <td>{product.shop}</td>
                   <td>
                     <Button type="button" variant="light" onClick={() => navigate(`/seller/product/${product._id}`)}>

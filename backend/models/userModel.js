@@ -8,6 +8,9 @@ const userSchema = new mongoose.Schema(
     isAdmin: { type: Boolean, default: true, required: true},
     userRole: { type: String, required: true, default: 'buyer' },
     shop: { type: String, default: "None" },
+    handmade: { type: Boolean, default: false },
+    logo: {type: String, default: "None"},
+    description: { type: String },
   },
   {
     timestamps: true

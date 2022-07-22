@@ -27,6 +27,8 @@ import ProductEditScreen from './screens/ProductEditScreen';
 import OrderListScreen from './screens/OrderListScreen';
 import SearchScreen from './screens/SearchScreen';
 import DashboardScreen from './screens/DashboardScreen';
+import VerificationScreen from './screens/VerificationScreen';
+import SellerScreen from './screens/SellerScreen';
 import SearchBox from './components/SearchBox';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -95,11 +97,15 @@ function App() {
                       <LinkContainer to="/profile">
                         <NavDropdown.Item>User Profile</NavDropdown.Item>
                       </LinkContainer>
-                      {userInfo.userRole === 'buyer'? (
+                      {userInfo.userRole === 'buyer' ? (
                         <LinkContainer to="/orderhistory">
                           <NavDropdown.Item>Order History</NavDropdown.Item>
                         </LinkContainer>
-                      ): (
+                      ) : userInfo.userRole === 'seller' ? (
+                          <LinkContainer to="/seller/verification">
+                            <NavDropdown.Item>Verification</NavDropdown.Item>
+                          </LinkContainer>
+                      ) : (
                         null
                       )}
                       <NavDropdown.Divider />
@@ -110,7 +116,7 @@ function App() {
                     Sign In
                     </Link>
                   )}
-                  
+
                   {userInfo && userInfo.userRole === 'seller' && (
                     <NavDropdown title="Admin" id="admin-nav-dropdown">
                       <LinkContainer to="/seller/dashboard">
@@ -171,6 +177,8 @@ function App() {
               <Route path="/seller/dashboard" element={<SellerRoute><DashboardScreen/></SellerRoute>} />
               <Route path="/seller/products" element={<SellerRoute><ProductListingScreen/></SellerRoute>} />
               <Route path="/seller/orders" element={<SellerRoute><OrderListScreen/></SellerRoute>} />
+              <Route path="/seller/shop" element={<SellerRoute><SellerScreen/></SellerRoute>} />
+              <Route path="/seller/verification" element={<SellerRoute><VerificationScreen/></SellerRoute>} />
               <Route path="/seller/product/:id" element={<SellerRoute><ProductEditScreen/></SellerRoute>} />
               <Route path="/seller/orders/history" element={<SellerRoute><OrderHistorySellerScreen/></SellerRoute>} />
               <Route path="/" element={<HomeScreen />} />
