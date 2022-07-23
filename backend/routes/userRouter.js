@@ -17,7 +17,6 @@ userRouter.get(
 
 userRouter.get(
   '/:shop',
-  isAuth,
   expressAsyncHandler(async(req, res) => {
     const user = await User.findOne({shop: req.params.shop});
     if (user) {
