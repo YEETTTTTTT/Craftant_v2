@@ -37,6 +37,7 @@ function Request(props) {
         <Link to={`/buyer/request/page/${product._id}`}>
           <Card.Title>{product.name}</Card.Title>
         </Link>
+        <Rating rating={product.rating} numReviews={product.numReviews} />
         <Card.Text>Budget: ${product.price}</Card.Text>
         <Card.Text>Require Amount: {product.stock}</Card.Text>
       </Card.Body>

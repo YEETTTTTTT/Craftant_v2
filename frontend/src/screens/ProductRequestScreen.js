@@ -41,7 +41,7 @@ const reducer = (state, action) => {
   }
 };
 
-export default function ProductListScreen() {
+export default function ProductRequestScreen() {
   const [{ loading, error, products, loadingCreate, loadingDelete, successDelete }, dispatch] = useReducer(reducer, {
     loading: true,
     error: '',

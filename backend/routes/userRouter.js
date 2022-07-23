@@ -36,6 +36,26 @@ userRouter.get(
   })
 )
 
+userRouter.get(
+  '/buyer/:id',
+  expressAsyncHandler(async(req, res) => {
+    console.log("hello");
+    const user = await User.findById(req.params.id);
+    if (user) {
+      res.send({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        shop: user.shop,
+        userRole: user.userRole,
+        logo: user.logo,
+      });
+    } else {
+      res.status(404).send({message: "User not Found"});
+    }
+  })
+)
+
 
 userRouter.post(
   '/signin',

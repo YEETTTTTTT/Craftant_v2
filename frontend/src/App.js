@@ -21,6 +21,7 @@ import OrderHistoryScreen from './screens/OrderHistoryScreen';
 import BuyerRoute from './components/BuyerRoute';
 import SellerRoute from './components/SellerRoute';
 import ProfileScreen from './screens/ProfileScreen';
+import BuyerScreen from './screens/BuyerScreen';
 import ProductListingScreen from './screens/ProductListingScreen';
 import OrderHistorySellerScreen from './screens/OrderHistorySellerScreen';
 import ProductEditScreen from './screens/ProductEditScreen';
@@ -32,6 +33,7 @@ import RequestPostScreen from './screens/RequestPostScreen';
 import DashboardScreen from './screens/DashboardScreen';
 import VerificationScreen from './screens/VerificationScreen';
 import ProductRequestScreen from './screens/ProductRequestScreen';
+import RequestsPageSellerScreen from './screens/RequestsPageSellerScreen';
 import SellerScreen from './screens/SellerScreen';
 import SearchBox from './components/SearchBox';
 import { ToastContainer, toast } from 'react-toastify';
@@ -97,7 +99,7 @@ function App() {
                   null
                 )}
                   {userInfo ? (
-                    <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
+                    <NavDropdown title={`Welcome, ${userInfo.name}`} id="basic-nav-dropdown">
                       <LinkContainer to="/profile">
                         <NavDropdown.Item>User Profile</NavDropdown.Item>
                       </LinkContainer>
@@ -109,6 +111,10 @@ function App() {
 
                         <LinkContainer to="/buyer/request">
                           <NavDropdown.Item>Product Requests</NavDropdown.Item>
+                        </LinkContainer>
+
+                        <LinkContainer to={`/buyer/${userInfo._id}`}>
+                          <NavDropdown.Item>Profile Page</NavDropdown.Item>
                         </LinkContainer>
                         </>
                       ) : userInfo.userRole === 'seller' ? (
@@ -148,6 +154,11 @@ function App() {
                       <LinkContainer to={userInfo.shop ? `/seller/${userInfo.shop}` : "/profile"}>
                         <NavDropdown.Item>Shop</NavDropdown.Item>
                       </LinkContainer>
+
+                      <LinkContainer to="/seller/request">
+                        <NavDropdown.Item>Requests</NavDropdown.Item>
+                      </LinkContainer>
+
                     </NavDropdown>
                   )}
                 </Nav>
@@ -193,11 +204,13 @@ function App() {
               <Route path="/orderhistory" element={<BuyerRoute><OrderHistoryScreen /></BuyerRoute>} />
               <Route path="/payment" element={<BuyerRoute><PaymentMethodScreen /></BuyerRoute>} />
               <Route path="/buyer/request" element={<BuyerRoute><ProductRequestScreen /></BuyerRoute>} />
+              <Route path="/buyer/:id" element={<BuyerScreen />} />
               <Route path="/buyer/request/:id" element={<BuyerRoute><RequestEditScreen /></BuyerRoute>} />
 
               <Route path="/seller/dashboard" element={<SellerRoute><DashboardScreen/></SellerRoute>} />
               <Route path="/seller/products" element={<SellerRoute><ProductListingScreen/></SellerRoute>} />
               <Route path="/seller/orders" element={<SellerRoute><OrderListScreen/></SellerRoute>} />
+              <Route path="/seller/request" element={<SellerRoute><RequestsPageSellerScreen/></SellerRoute>} />
               <Route path="/seller/:shop" element={<SellerScreen/>}/>
               <Route path="/seller/verification" element={<SellerRoute><VerificationScreen/></SellerRoute>} />
               <Route path="/seller/product/:id" element={<SellerRoute><ProductEditScreen/></SellerRoute>} />

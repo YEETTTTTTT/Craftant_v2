@@ -157,6 +157,8 @@ productRouter.put(
       product.price = req.body.price;
       product.image = req.body.image;
       product.category = req.body.category;
+      product.rating = req.body.rating,
+      product.numReviews = req.body.numReviews,
       product.stock = req.body.stock;
       product.description = req.body.description;
       product.user = req.user._id,
@@ -228,6 +230,36 @@ productRouter.post(
   })
 );
 
+productRouter.post(
+  '/request/:id/reviews',
+  isAuth,
+  expressAsyncHandler(async(req, res) => {
+      const productId = req.params.id;
+      const product = await Product.findById(productId).populate('applicant', 'shop');
+      if (product) {
+        if (product.applicant.shop === req.user.shop) {
+            if (product.reviews.find((x) => x.name === req.user.name)) {
+              return res.status(400).send({message: 'You already left a review.'});
+            }
+            const review = {
+              name: req.user.name,
+              rating: Number(req.body.rating),
+              comment: req.body.comment,
+            };
+            product.reviews.push(review);
+            product.numReviews = product.reviews.length;
+            product.rating = product.reviews.reduce((a,c) => c.rating + a, 0) / product.reviews.length;
+            const updatedProduct = await product.save();
+            res.status(201).send({message: 'Review Created', review: updatedProduct.reviews[updatedProduct.reviews.length-1], numReviews: product.numReviews, rating: product.numReviews});
+        } else {
+          res.status(404).send({message: 'Only the Crafter can leave a review.'});
+        }
+      } else {
+        res.status(404).send({message: 'Request Not Found.'});
+      }
+  })
+);
+
 productRouter.get(
   '/seller',
   isAuth,
@@ -245,7 +277,7 @@ productRouter.get(
   '/request',
   expressAsyncHandler(async (req, res) => {
     const { query } = req;
-    const products = await Product.find().populate('applicant', 'shop')
+    const products = await Product.find({type: "request"}).populate('applicant', 'shop');
     res.send({
       products,
     });

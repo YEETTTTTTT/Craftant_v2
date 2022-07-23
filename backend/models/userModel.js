@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema(
     handmade: { type: Boolean, default: false },
     logo: {type: String, default: "/images/icon.jpg"},
     description: { type: String },
+    money: { type: Number, default: 1000},
   },
   {
     timestamps: true

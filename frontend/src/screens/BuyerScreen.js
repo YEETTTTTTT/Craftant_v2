@@ -10,7 +10,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import Product from '../components/Product';
+import Request from '../components/Request';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { toast } from 'react-toastify';
 import Rating from '../components/Rating';
@@ -34,13 +34,13 @@ const reducer = (state, action) => {
   }
 };
 
-export default function SellerScreen() {
+export default function BuyerScreen() {
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { userInfo } = state;
 
   const params = useParams();
-  const { shop } = params;
+  const { id } = params;
 
   const [{ loading, error, products, user }, dispatch] = useReducer(reducer, {
     products: [],
@@ -48,6 +48,8 @@ export default function SellerScreen() {
     error: '',
     user: [],
   });
+
+  console.log(params);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,7 +65,7 @@ export default function SellerScreen() {
       dispatch({type: 'FETCHUSER_REQUEST'});
       try {
         const user = await axios.get(
-          `/api/users/${shop}`,
+          `/api/users/buyer/${id}`,
         );
         dispatch({type: 'FETCHUSER_SUCCESS', payload: user.data});
       } catch(err) {
@@ -73,19 +75,22 @@ export default function SellerScreen() {
     }
     fetchData();
     fetchUser();
-  }, [shop]);
-  const isShop = (product) => (product.shop === user.shop);
-  const sumRating = products.filter(isShop).map((product) => product.rating).reduce((a, c) => a+c, 0);
-  const avgRating = sumRating/products.filter(isShop).length;
+  }, [id]);
 
-  const sumReviews = products.filter(isShop).map((product) => product.numReviews).reduce((a,c) => a+c, 0);
+  console.log(user);
+
+  const isUser = (product) => (product.user === user._id);
+  const sumRating = products.filter(isUser).map((product) => product.rating).reduce((a, c) => a+c, 0);
+  const avgRating = sumRating/products.filter(isUser).length;
+
+  const sumReviews = products.filter(isUser).map((product) => product.numReviews).reduce((a,c) => a+c, 0);
 
   return (
     <div>
       <Helmet>
-        <title>Shop</title>
+        <title>Profile Page</title>
       </Helmet>
-      <h1>{user.shop}'s Shop</h1>
+      <h1>{user.name}'s Profile Page</h1>
       <div className="products">
         {loading ? (
           <LoadingBox />
@@ -96,20 +101,14 @@ export default function SellerScreen() {
           <Col lg={3} md={4} sm={12} className="me-5">
             <Card>
               <Card.Body className="text-center">
-                <Card.Title className="mb-3"><strong>{user.shop}</strong></Card.Title>
+                <Card.Title className="mb-3"><strong>{user.name}</strong></Card.Title>
                 <img src={user.logo} className="seller-logo"/>
 
                 <Card.Text className="mt-3">
-                <strong> About {user.shop}: </strong>
+                <strong> About {user.name}: </strong>
                 <br/>
                   {user.description}
                 </Card.Text>
-                <hr/>
-                {user.handmade === true ? (
-                  <i className="fas fa-star star"><h4>Verified Handmade!</h4></i>
-                ) : (
-                  <h5>No Badges Yet...</h5>
-                )}
                 <hr/>
                 <Card.Text>
                   <Rating numReviews={sumReviews} rating={avgRating}/>
@@ -119,9 +118,9 @@ export default function SellerScreen() {
           </Col>
           <Col>
             <Row>
-              {products.filter(isShop).map((product) => (
-                <Col key={product.slug} sm={12} md={6} lg={4} className="mb-3">
-                  <Product product={product}></Product>
+              {products.filter(isUser).map((product) => (
+                <Col key={product._id} sm={12} md={6} lg={4} className="mb-3">
+                  <Request product={product}></Request>
                 </Col>
               ))}
             </Row>

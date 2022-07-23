@@ -108,18 +108,18 @@ export default function ProfileScreen() {
           <Form.Control value={name} onChange={(e) => setName(e.target.value)} required/>
         </Form.Group>
 
+        <img
+          className="seller-logo"
+          src={userInfo.logo}
+        ></img>
+        <Form.Group className="mb-3" controlId = "imageFile">
+          <Form.Label>Logo</Form.Label>
+          <Form.Control type="file" onChange={uploadFileHandler} />
+          {loadingUpload && <LoadingBox />}
+        </Form.Group>
+
         {userInfo.userRole === 'seller' && (
           <>
-          <img
-            className="seller-logo"
-            src={userInfo.logo}
-          ></img>
-          <Form.Group className="mb-3" controlId = "imageFile">
-            <Form.Label>Shop Logo</Form.Label>
-            <Form.Control type="file" onChange={uploadFileHandler} />
-            {loadingUpload && <LoadingBox />}
-          </Form.Group>
-
             <Form.Group className="mb-3" controlId="description">
               <Form.Label>Shop Description</Form.Label>
               <Form.Control

@@ -47,6 +47,11 @@ Form {
   height:400px;
 }
 
+#check-review {
+  background-color: skyblue;
+
+}
+
 .rating span {
   color: #ffc000;
 }
