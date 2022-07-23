@@ -7,9 +7,9 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true},
     isAdmin: { type: Boolean, default: true, required: true},
     userRole: { type: String, required: true, default: 'buyer' },
-    shop: { type: String, default: "None" },
+    shop: { type: String, unique: true},
     handmade: { type: Boolean, default: false },
-    logo: {type: String, default: "None"},
+    logo: {type: String, default: "/images/icon.jpg"},
     description: { type: String },
   },
   {

@@ -43,7 +43,6 @@ export default function ProfileScreen() {
   const [description, setDescription] = useState(userInfo.description);
   const [handmade, setHandmade] = useState('');
 
-
   const [{ loadingUpdate, loadingUpload }, dispatch] = useReducer(reducer, {
     loadingUpdate: false,
   });
@@ -136,12 +135,12 @@ export default function ProfileScreen() {
           <Form.Control type="email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
         </Form.Group>
 
-        {userInfo.userRole === 'seller' && userInfo.shop === 'None' ? (
+        {userInfo.userRole === 'seller' && !userInfo.shop ? (
           <Form.Group className="mb-3" controlId="shop">
             <Form.Label>Shop Name</Form.Label>
             <Form.Control value={shop} onChange={(e) => setShop(e.target.value)} required/>
           </Form.Group>
-        ) : userInfo.userRole === 'seller' && userInfo.shop !== 'None' ? (
+        ) : userInfo.userRole === 'seller' && userInfo.shop ? (
           <Form.Group className="mb-3" controlId="shop">
             <Form.Label>Shop Name</Form.Label>
             <Form.Control value={shop} onChange={(e) => setShop(e.target.value)} required disabled/>

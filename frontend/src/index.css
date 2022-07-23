@@ -43,6 +43,10 @@ Form {
   justify-content: center;
 }
 
+.user-card {
+  height:400px;
+}
+
 .rating span {
   color: #ffc000;
 }
@@ -80,6 +84,16 @@ Form {
   padding-bottom: 3%;
   border-radius: 50%;
 }
+
+#product-shop-link {
+  display: block;
+  margin-left: 60%;
+}
+
+.handmade-icon {
+  color: pink;
+}
+
 .img-thumbnail {
   height: 80px;
 }

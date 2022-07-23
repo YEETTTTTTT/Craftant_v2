@@ -135,7 +135,7 @@ function App() {
                         <NavDropdown.Item>Order History</NavDropdown.Item>
                       </LinkContainer>
 
-                      <LinkContainer to="/seller/shop">
+                      <LinkContainer to={userInfo.shop ? `/seller/${userInfo.shop}` : "/profile"}>
                         <NavDropdown.Item>Shop</NavDropdown.Item>
                       </LinkContainer>
                     </NavDropdown>
@@ -177,7 +177,7 @@ function App() {
               <Route path="/seller/dashboard" element={<SellerRoute><DashboardScreen/></SellerRoute>} />
               <Route path="/seller/products" element={<SellerRoute><ProductListingScreen/></SellerRoute>} />
               <Route path="/seller/orders" element={<SellerRoute><OrderListScreen/></SellerRoute>} />
-              <Route path="/seller/shop" element={<SellerRoute><SellerScreen/></SellerRoute>} />
+              <Route path="/seller/:shop" element={<SellerScreen/>}/>
               <Route path="/seller/verification" element={<SellerRoute><VerificationScreen/></SellerRoute>} />
               <Route path="/seller/product/:id" element={<SellerRoute><ProductEditScreen/></SellerRoute>} />
               <Route path="/seller/orders/history" element={<SellerRoute><OrderHistorySellerScreen/></SellerRoute>} />

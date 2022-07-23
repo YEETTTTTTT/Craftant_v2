@@ -23,6 +23,12 @@ const reducer = (state, action) => {
       return { ...state, products: action.payload, loading: false };
     case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
+    case 'FETCHUSER_REQUEST':
+      return { ...state, loading: true };
+    case 'FETCHUSER_SUCCESS':
+      return { ...state, user: action.payload, loading: false };
+    case 'FETCHUSER_FAIL':
+      return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }
@@ -30,19 +36,18 @@ const reducer = (state, action) => {
 
 export default function SellerScreen() {
 
-  const [{ loading, error, products }, dispatch] = useReducer(reducer, {
+  const { state, dispatch: ctxDispatch } = useContext(Store);
+  const { userInfo } = state;
+
+  const params = useParams();
+  const { shop } = params;
+
+  const [{ loading, error, products, user }, dispatch] = useReducer(reducer, {
     products: [],
     loading: true,
     error: '',
+    user: [],
   });
-
-  const { state } = useContext(Store);
-  const { userInfo } = state;
-
-
-  const isShop = (product) => (product.shop === userInfo.shop);
-
-  console.log(userInfo);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,12 +58,29 @@ export default function SellerScreen() {
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: err.message });
       }
-
     };
+    const fetchUser = async () => {
+      dispatch({type: 'FETCHUSER_REQUEST'});
+      try {
+        const user = await axios.get(
+          `/api/users/${shop}`,
+          {
+            headers: {Authorization: `Bearer ${userInfo.token}`},
+          }
+        );
+        dispatch({type: 'FETCHUSER_SUCCESS', payload: user.data});
+      } catch(err) {
+        dispatch({type: 'FETCHUSER_FAIL'});
+        toast.error(getError(err));
+      }
+    }
     fetchData();
-  }, [userInfo]);
+    fetchUser();
+  }, [shop]);
 
+  console.log(user);
 
+  const isShop = (product) => (product.shop === user.shop);
   const sumRating = products.filter(isShop).map((product) => product.rating).reduce((a, c) => a+c, 0);
   const avgRating = sumRating/products.filter(isShop).length;
 
@@ -67,9 +89,9 @@ export default function SellerScreen() {
   return (
     <div>
       <Helmet>
-        <title>{userInfo.shop}'s Shop</title>
+        <title>Shop</title>
       </Helmet>
-      <h1>{userInfo.shop}'s Shop</h1>
+      <h1>{user.shop}'s Shop</h1>
       <div className="products">
         {loading ? (
           <LoadingBox />
@@ -80,18 +102,20 @@ export default function SellerScreen() {
           <Col lg={3} md={4} sm={12} className="me-5">
             <Card>
               <Card.Body className="text-center">
-                <Card.Title className="mb-3"><strong>{userInfo.shop}</strong></Card.Title>
-                <img src={userInfo.logo} className="seller-logo"/>
+                <Card.Title className="mb-3"><strong>{user.shop}</strong></Card.Title>
+                <img src={user.logo} className="seller-logo"/>
 
                 <Card.Text className="mt-3">
-                <strong> About {userInfo.shop}: </strong>
+                <strong> About {user.shop}: </strong>
                 <br/>
-                  {userInfo.description}
+                  {user.description}
                 </Card.Text>
                 <hr/>
-                {userInfo.handmade === true ? (
+                {user.handmade === true ? (
                   <i className="fas fa-star star"><h4>Verified Handmade!</h4></i>
-                ) : null}
+                ) : (
+                  <h5>No Badges Yet...</h5>
+                )}
                 <hr/>
                 <Card.Text>
                   <Rating numReviews={sumReviews} rating={avgRating}/>

@@ -3,8 +3,41 @@ import bcrypt from 'bcryptjs';
 import expressAsyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
 import { generateToken, isAuth } from '../utils.js';
+import mongoose from 'mongoose';
 
 const userRouter = express.Router();
+
+userRouter.get(
+  '/',
+  isAuth,
+  expressAsyncHandler(async(req, res) => {
+    const users = await User.find({userRole: "seller"});
+    res.send(users);
+  })
+);
+
+userRouter.get(
+  '/:shop',
+  isAuth,
+  expressAsyncHandler(async(req, res) => {
+    const user = await User.findOne({shop: req.params.shop});
+    if (user) {
+      res.send({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        shop: user.shop,
+        userRole: user.userRole,
+        description: user.description,
+        logo: user.logo,
+        handmade: user.handmade,
+        token: generateToken(user),
+      });
+    } else {
+      res.status(404).send({message: "User not Found"});
+    }
+  })
+)
 
 
 userRouter.post(
@@ -38,7 +71,6 @@ userRouter.post(
     const newUser = new User({
       name: req.body.name,
       email: req.body.email,
-      shop: "None",
       userRole: req.body.userRole,
       password: bcrypt.hashSync(req.body.password),
     });

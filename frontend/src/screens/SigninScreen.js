@@ -17,6 +17,11 @@ export default function SigninScreen() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [shop, setShop] = useState('');
+  const [logo, setLogo] = useState('');
+  const [description, setDescription] = useState('');
+  const [handmade, setHandmade] = useState('');
 
   const {state, dispatch: ctxDispatch } = useContext(Store);
   const {userInfo} = state;
@@ -51,7 +56,12 @@ export default function SigninScreen() {
     try{
       const {data} = await Axios.post('/api/users/signin', {
         email,
-        password
+        password,
+        description,
+        shop,
+        name,
+        handmade,
+        logo
       });
       ctxDispatch({type: 'USER_SIGNIN', payload: data})
       localStorage.setItem('userInfo', JSON.stringify(data));

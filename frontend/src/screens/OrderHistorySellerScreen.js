@@ -22,8 +22,6 @@ const reducer = (state, action) => {
   }
 };
 
-const isCompleted = (order) => (order.isPaid && order.isDelivered)
-
 export default function OrderHistoryScreen() {
 
   const { state } = useContext(Store);
@@ -53,6 +51,8 @@ export default function OrderHistoryScreen() {
     };
     fetchData();
   }, [userInfo]);
+
+  const isCompleted = (order) => (order.isPaid && order.isDelivered);
 
   return (
     <div className="order-history-box">

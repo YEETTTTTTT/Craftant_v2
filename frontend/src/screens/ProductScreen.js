@@ -147,9 +147,10 @@ function ProductScreen() {
               <p>{product.description}</p>
             </ListGroup.Item>
             <ListGroup.Item>
-              <h4>Shop: {product.shop} {product.user.handmade === true ? (
-                <i className="fas fa-star star"></i>
-              ) : null}</h4>
+              <h4>Shop: <Link to={`/seller/${product.shop}`}><Card.Title>{product.shop} {product.user.handmade === true ? (
+                <i class="fab fa-canadian-maple-leaf handmade-icon"></i>
+              ) : null}</Card.Title></Link>
+              </h4>
             </ListGroup.Item>
           </ListGroup>
         </Col>

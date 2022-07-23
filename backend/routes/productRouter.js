@@ -78,22 +78,26 @@ productRouter.get('/search', expressAsyncHandler( async (req, res) => {
 }));
 
 productRouter.post('/', isAuth, isSeller, expressAsyncHandler(async (req, res) => {
-  const newProduct = new Product({
-    name: 'sample name ' + Date.now(),
-    slug: 'sample-name-' + Date.now(),
-    image: '/images/cake.jpg',
-    price: 0,
-    category: 'sample category',
-    shop: req.user.shop,
-    stock: 0,
-    rating: 0,
-    numReviews: 0,
-    description: 'sample description',
-    user: req.user._id,
-    sales: 0
-  });
-  const product = await newProduct.save();
-  res.send({message: 'Product Created', product });
+  if (!req.user.shop) {
+    return res.status(404).send({message: "Please Set Up Your Shop Name First."});
+  } else {
+      const newProduct = new Product({
+        name: 'sample name ' + Date.now(),
+        slug: 'sample-name-' + Date.now(),
+        image: '/images/cake.jpg',
+        price: 0,
+        category: 'sample category',
+        shop: req.user.shop,
+        stock: 0,
+        rating: 0,
+        numReviews: 0,
+        description: 'sample description',
+        user: req.user._id,
+        sales: 0
+      });
+      const product = await newProduct.save();
+      res.send({message: 'Product Created', product });
+    }
 }));
 
 productRouter.put(
