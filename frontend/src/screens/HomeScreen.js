@@ -65,15 +65,14 @@ function HomeScreen() {
     fetchUser();
   }, []);
 
-  console.log(users);
-  console.log(products);
+  const isListing = (product) => (product.type === "listing");
 
   return (
     <div>
       <Helmet>
         <title>Craftant</title>
       </Helmet>
-      <h1 class="della-font-headers">Featured Products</h1>
+      <h1 className="della-font-headers">Featured Products</h1>
       <div className="products">
         {loading ? (
           <LoadingBox />
@@ -81,7 +80,7 @@ function HomeScreen() {
           <MessageBox variant="danger">{error}</MessageBox>
         ) : (
           <Row>
-            {products.filter(isAvailable).map((product) => (
+            {products.filter(isAvailable).filter(isListing).map((product) => (
               <Col key={product.slug} sm={6} md={4} lg={3} className="mb-3">
                 <Product product={product}></Product>
               </Col>

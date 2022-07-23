@@ -24,10 +24,14 @@ import ProfileScreen from './screens/ProfileScreen';
 import ProductListingScreen from './screens/ProductListingScreen';
 import OrderHistorySellerScreen from './screens/OrderHistorySellerScreen';
 import ProductEditScreen from './screens/ProductEditScreen';
+import RequestEditScreen from './screens/RequestEditScreen';
 import OrderListScreen from './screens/OrderListScreen';
 import SearchScreen from './screens/SearchScreen';
+import RequestsPageScreen from './screens/RequestsPageScreen';
+import RequestPostScreen from './screens/RequestPostScreen';
 import DashboardScreen from './screens/DashboardScreen';
 import VerificationScreen from './screens/VerificationScreen';
+import ProductRequestScreen from './screens/ProductRequestScreen';
 import SellerScreen from './screens/SellerScreen';
 import SearchBox from './components/SearchBox';
 import { ToastContainer, toast } from 'react-toastify';
@@ -98,9 +102,15 @@ function App() {
                         <NavDropdown.Item>User Profile</NavDropdown.Item>
                       </LinkContainer>
                       {userInfo.userRole === 'buyer' ? (
+                        <>
                         <LinkContainer to="/orderhistory">
                           <NavDropdown.Item>Order History</NavDropdown.Item>
                         </LinkContainer>
+
+                        <LinkContainer to="/buyer/request">
+                          <NavDropdown.Item>Product Requests</NavDropdown.Item>
+                        </LinkContainer>
+                        </>
                       ) : userInfo.userRole === 'seller' ? (
                           <LinkContainer to="/seller/verification">
                             <NavDropdown.Item>Verification</NavDropdown.Item>
@@ -157,22 +167,33 @@ function App() {
                 </LinkContainer>
               </Nav.Item>
             ))}
+            <br/>
+            <Nav.Item>
+              <strong>Product/Service Requests</strong>
+              <LinkContainer to="/requests" onClick={() => setSidebarIsOpen(false)}>
+                <Nav.Link>Requests</Nav.Link>
+              </LinkContainer>
+            </Nav.Item>
           </Nav>
         </div>
         <main>
           <Container className="mt-3">
             <Routes>
               <Route path="/product/:slug" element={<ProductScreen />} />
+              <Route path="/buyer/request/page/:id" element={<RequestPostScreen />} />
               <Route path="/cart" element={<BuyerRoute><CartScreen /></BuyerRoute>} />
               <Route path="/search" element={<SearchScreen />} />
               <Route path="/signin" element={<SigninScreen />} />
               <Route path="/register" element={<RegisterScreen />} />
               <Route path="/profile" element={<ProfileScreen />} />
+              <Route path="/requests" element={<RequestsPageScreen />} />
               <Route path="/shipping" element={<BuyerRoute><ShippingAddressScreen /></BuyerRoute>} />
-              <Route path="placeorder" element={<BuyerRoute><PlaceOrderScreen /></BuyerRoute>} />
+              <Route path="/placeorder" element={<BuyerRoute><PlaceOrderScreen /></BuyerRoute>} />
               <Route path="/order/:id" element={<OrderScreen />} />
               <Route path="/orderhistory" element={<BuyerRoute><OrderHistoryScreen /></BuyerRoute>} />
               <Route path="/payment" element={<BuyerRoute><PaymentMethodScreen /></BuyerRoute>} />
+              <Route path="/buyer/request" element={<BuyerRoute><ProductRequestScreen /></BuyerRoute>} />
+              <Route path="/buyer/request/:id" element={<BuyerRoute><RequestEditScreen /></BuyerRoute>} />
 
               <Route path="/seller/dashboard" element={<SellerRoute><DashboardScreen/></SellerRoute>} />
               <Route path="/seller/products" element={<SellerRoute><ProductListingScreen/></SellerRoute>} />

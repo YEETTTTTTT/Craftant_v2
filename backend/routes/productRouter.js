@@ -1,7 +1,7 @@
 import express from 'express';
 import Product from '../models/productModel.js';
 import expressAsyncHandler from 'express-async-handler';
-import { isAuth, isSeller } from '../utils.js';
+import { isAuth, isSeller, isBuyer } from '../utils.js';
 import Order from '../models/orderModel.js';
 import User from '../models/userModel.js';
 
@@ -87,17 +87,36 @@ productRouter.post('/', isAuth, isSeller, expressAsyncHandler(async (req, res) =
         image: '/images/cake.jpg',
         price: 0,
         category: 'sample category',
-        shop: req.user.shop,
+        shop: req.user.shop || "None",
         stock: 0,
         rating: 0,
         numReviews: 0,
         description: 'sample description',
         user: req.user._id,
-        sales: 0
+        type: "listing",
       });
       const product = await newProduct.save();
       res.send({message: 'Product Created', product });
     }
+}));
+
+productRouter.post('/request', isAuth, isBuyer, expressAsyncHandler(async (req, res) => {
+      const newProduct = new Product({
+        name: 'sample name ' + Date.now(),
+        slug: 'sample-name-' + Date.now(),
+        image: '/images/cake.jpg',
+        price: 0,
+        category: 'sample category',
+        shop: 'sample-shop',
+        stock: 0,
+        rating: 0,
+        numReviews: 0,
+        description: 'sample description',
+        user: req.user._id,
+        type: "request",
+      });
+      const product = await newProduct.save();
+      res.send({message: 'Request Created', product });
 }));
 
 productRouter.put(
@@ -117,10 +136,48 @@ productRouter.put(
       product.stock = req.body.stock;
       product.description = req.body.description;
       product.user = req.user._id,
+      product.type = "listing",
       await product.save();
       res.send({message: "Product Updated"});
     } else {
       res.status(404).send({message: "Product Not Found"});
+    }
+  })
+);
+
+productRouter.put(
+  '/request/:id',
+  isAuth,
+  isBuyer,
+  expressAsyncHandler(async (req, res) => {
+    const productId = req.params.id;
+    const product = await Product.findById(productId);
+    if (product) {
+      product.name = req.body.name;
+      product.price = req.body.price;
+      product.image = req.body.image;
+      product.category = req.body.category;
+      product.stock = req.body.stock;
+      product.description = req.body.description;
+      product.user = req.user._id,
+      product.type = "request",
+      await product.save();
+      res.send({message: "Request Updated"});
+    } else {
+      res.status(404).send({message: "Request Not Found"});
+    }
+  })
+);
+
+productRouter.put(
+  '/request/:id/apply', isAuth, expressAsyncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id).populate('applicant', 'shop');
+    if (product) {
+      product.applicant = req.user._id;
+      const updatedProduct = await product.save();
+      res.send({ message: 'Applied', product: updatedProduct});
+    } else {
+      res.status(404).send({message: 'Product Not Found'});
     }
   })
 );
@@ -132,6 +189,16 @@ productRouter.delete('/:id', isAuth, isSeller, expressAsyncHandler(async (req, r
     res.send({message: 'Product Deleted'});
   } else {
     res.status(404).send({message: 'Product Not Found'});
+  }
+}));
+
+productRouter.delete('/request/:id', isAuth, isBuyer, expressAsyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (product) {
+    await product.remove();
+    res.send({message: 'Request Deleted'});
+  } else {
+    res.status(404).send({message: 'Request Not Found'});
   }
 }));
 
@@ -175,6 +242,17 @@ productRouter.get(
 );
 
 productRouter.get(
+  '/request',
+  expressAsyncHandler(async (req, res) => {
+    const { query } = req;
+    const products = await Product.find().populate('applicant', 'shop')
+    res.send({
+      products,
+    });
+  })
+);
+
+productRouter.get(
   '/categories',
   expressAsyncHandler(async (req, res) => {
     const categories = await Product.find().distinct('category');
@@ -184,6 +262,15 @@ productRouter.get(
 
 productRouter.get('/slug/:slug', async(req, res) => {
   const product = await Product.findOne({slug:req.params.slug}).populate('user', 'handmade');
+  if (product) {
+    res.send(product);
+  } else {
+    res.status(404).send({ message: 'Product Not Found' });
+  }
+});
+
+productRouter.get('/request/page/:id', async(req, res) => {
+  const product = await Product.findById(req.params.id).populate('user', 'name').populate('applicant', 'shop');
   if (product) {
     res.send(product);
   } else {
