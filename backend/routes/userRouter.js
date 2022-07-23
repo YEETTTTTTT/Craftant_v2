@@ -9,7 +9,6 @@ const userRouter = express.Router();
 
 userRouter.get(
   '/',
-  isAuth,
   expressAsyncHandler(async(req, res) => {
     const users = await User.find({userRole: "seller"});
     res.send(users);

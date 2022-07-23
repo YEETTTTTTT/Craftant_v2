@@ -55,9 +55,7 @@ function HomeScreen() {
     const fetchUser = async() => {
       dispatch({type: 'FETCHUSER_REQUEST'});
       try {
-        const user = await axios.get('/api/users', {
-          headers: {Authorization: `Bearer ${userInfo.token}`},
-        });
+        const user = await axios.get('/api/users');
         dispatch({ type: 'FETCHUSER_SUCCESS', payload: user.data});
       } catch(err) {
         dispatch({ type: 'FETCHUSER_FAIL', payload: err.message});
