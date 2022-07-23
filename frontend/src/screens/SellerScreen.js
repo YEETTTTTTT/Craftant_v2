@@ -64,9 +64,6 @@ export default function SellerScreen() {
       try {
         const user = await axios.get(
           `/api/users/${shop}`,
-          {
-            headers: {Authorization: `Bearer ${userInfo.token}`},
-          }
         );
         dispatch({type: 'FETCHUSER_SUCCESS', payload: user.data});
       } catch(err) {

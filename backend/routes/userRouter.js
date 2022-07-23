@@ -29,7 +29,6 @@ userRouter.get(
         description: user.description,
         logo: user.logo,
         handmade: user.handmade,
-        token: generateToken(user),
       });
     } else {
       res.status(404).send({message: "User not Found"});
