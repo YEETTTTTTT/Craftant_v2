@@ -75,8 +75,9 @@ export default function SellerScreen() {
     fetchUser();
   }, [shop]);
   const isShop = (product) => (product.shop === user.shop);
+  const hasRating = (product) => (product.numReviews > 0);
   const sumRating = products.filter(isShop).map((product) => product.rating).reduce((a, c) => a+c, 0);
-  const avgRating = sumRating/products.filter(isShop).length;
+  const avgRating = sumRating/products.filter(isShop).filter(hasRating).length;
 
   const sumReviews = products.filter(isShop).map((product) => product.numReviews).reduce((a,c) => a+c, 0);
 
