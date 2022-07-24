@@ -2,13 +2,12 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 import Rating from './Rating';
+import Badge from 'react-bootstrap/Badge';
 import axios from 'axios';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import { useContext } from 'react';
 import { Store } from '../Store';
 
-function Request(props) {
+function ProductSeller(props) {
   const { product } = props;
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -19,7 +18,7 @@ function Request(props) {
   const addToCartHandler = async (item) => {
     const existItem = cartItems.find((x) => x._id === product._id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
-    const { data } = await axios.get(`/api/products/request/${item._id}`);
+    const { data } = await axios.get(`/api/products/${item._id}`);
     if (data.stock < quantity) {
       window.alert('Sorry. Product is out of stock');
       return;
@@ -31,27 +30,27 @@ function Request(props) {
   };
 
   return (
-    <Card className="product-card" style={{border: "1px solid grey"}}>
-      <Link to={`/buyer/request/page/${product._id}`}>
+    <Card style={{border: "1px solid grey"}}>
+      <Link to={`/product/${product.slug}`}>
         <img src={product.image} className="card-img-top" alt={product.name} />
       </Link>
       <Card.Body>
-        <Row>
-          <Link to={`/buyer/request/page/${product._id}`}>
-            <Card.Title>{product.name}</Card.Title>
-          </Link>
-        </Row>
-        <Row>
-          <Rating rating={product.rating} numReviews={product.numReviews} />
-        </Row>
-        <Row>
-          <Card.Text>Budget: ${product.price}</Card.Text>
-        </Row>
-        <Row>
-          <Card.Text>Require Amount: {product.stock}</Card.Text>
-        </Row>
+        <Link to={`/product/${product.slug}`}>
+          <Card.Title>{product.name}</Card.Title>
+        </Link>
+        <Rating rating={product.rating} numReviews={product.numReviews} />
+        <Card.Text><h5>Price: <strong>${product.price}</strong></h5></Card.Text>
+        <Card.Text><h5>Sales: <strong>{product.sales}</strong></h5></Card.Text>
+        <Card.Text><h5>Stock: <strong>{product.stock}</strong></h5></Card.Text>
       </Card.Body>
+      {product.stock < 5 ? (
+        <Badge bg="warning">Low Stock</Badge>
+      ) : product.stock === 0 ? (
+        <Badge bg="danger">Out of Stock</Badge>
+      ) : (
+        <Badge bg="success">In Stock</Badge>
+      )}
     </Card>
   );
 }
-export default Request;
+export default ProductSeller;

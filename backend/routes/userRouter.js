@@ -16,6 +16,15 @@ userRouter.get(
 );
 
 userRouter.get(
+  '/profile',
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id);
+    res.send(user);
+  })
+);
+
+userRouter.get(
   '/:shop',
   expressAsyncHandler(async(req, res) => {
     const user = await User.findOne({shop: req.params.shop});
@@ -29,6 +38,7 @@ userRouter.get(
         description: user.description,
         logo: user.logo,
         handmade: user.handmade,
+        money: user.money,
       });
     } else {
       res.status(404).send({message: "User not Found"});
@@ -39,7 +49,6 @@ userRouter.get(
 userRouter.get(
   '/buyer/:id',
   expressAsyncHandler(async(req, res) => {
-    console.log("hello");
     const user = await User.findById(req.params.id);
     if (user) {
       res.send({
@@ -49,6 +58,8 @@ userRouter.get(
         shop: user.shop,
         userRole: user.userRole,
         logo: user.logo,
+        description: user.description,
+        money: user.money,
       });
     } else {
       res.status(404).send({message: "User not Found"});
@@ -73,6 +84,7 @@ userRouter.post(
           description: user.description,
           logo: user.logo,
           handmade: user.handmade,
+          money: user.money,
           token: generateToken(user),
         });
         return;
@@ -99,6 +111,7 @@ userRouter.post(
       shop: user.shop,
       isAdmin: user.isAdmin,
       userRole: user.userRole,
+      money: user.money,
       token: generateToken(user),
     });
   })
@@ -117,6 +130,7 @@ userRouter.put(
       user.handmade = req.body.handmade || user.handmade;
       user.logo = req.body.logo || user.logo;
       user.description = req.body.description;
+      user.money = user.money;
       if (req.body.password) {
         user.password = bcrypt.hashSync(req.body.password, 8);
       }
@@ -131,6 +145,7 @@ userRouter.put(
         handmade: updatedUser.handmade,
         logo: updatedUser.logo,
         description: updatedUser.description,
+        money: updatedUser.money,
         token: generateToken(updatedUser),
       });
     } else {

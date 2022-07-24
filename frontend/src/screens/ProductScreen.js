@@ -142,6 +142,7 @@ function ProductScreen() {
               ></Rating>
             </ListGroup.Item>
             <ListGroup.Item>Price: ${product.price}</ListGroup.Item>
+            <ListGroup.Item>Stock Left: {product.stock}</ListGroup.Item>
             <ListGroup.Item>
               Description:
               <p>{product.description}</p>

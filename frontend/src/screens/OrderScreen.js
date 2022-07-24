@@ -95,7 +95,7 @@ export default function OrderScreen() {
         headers: { authorization: `Bearer ${userInfo.token}` },
       });
       dispatch({ type: 'PAY_SUCCESS' });
-      toast.success('Order Delivered.');
+      toast.success('Payment Successful.');
     } catch(err) {
       toast.error(getError(err));
       dispatch({ type: 'PAY_FAIL' });

@@ -47,6 +47,10 @@ Form {
   height:400px;
 }
 
+.request-card {
+
+}
+
 #check-review {
   background-color: skyblue;
 
@@ -78,6 +82,10 @@ Form {
 }
 .img-large {
   max-width: 100%;
+}
+
+.product-card {
+  height: 550px;
 }
 
 .seller-logo {

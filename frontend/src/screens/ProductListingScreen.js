@@ -136,9 +136,11 @@ export default function ProductListScreen() {
               <tr>
                 <th>ID</th>
                 <th>NAME</th>
-                <th>PRICE</th>
                 <th>CATEGORY</th>
-                <th>SHOP</th>
+                <th>PRICE</th>
+                <th>SALES</th>
+                <th>TOTAL REVENUE</th>
+                <th>STOCK LEFT</th>
                 <th>ACTIONS</th>
               </tr>
             </thead>
@@ -147,14 +149,19 @@ export default function ProductListScreen() {
                 <tr key={product._id}>
                   <td>#{product._id}</td>
                   <td>{product.name}</td>
+                  <td>{product.category}</td>
                   <td>${product.price}</td>
-                  <td>
-
-                  </td>
-                  <td>{product.shop}</td>
+                  <td>{product.sales}</td>
+                  <td>${product.revenue}</td>
+                  <td>{product.stock}</td>
                   <td>
                     <Button type="button" variant="light" onClick={() => navigate(`/seller/product/${product._id}`)}>
                       Edit
+                    </Button>
+                    <Button type="button" variant="light" onClick={() => {
+                      navigate(`/product/${product.slug}`);
+                    }}>
+                      Details
                     </Button>
                     &nbsp;
                     <Button type="button" variant="light" onClick={() => deleteHandler(product)}>

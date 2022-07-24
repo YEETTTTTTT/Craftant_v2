@@ -49,7 +49,6 @@ export default function BuyerScreen() {
     user: [],
   });
 
-  console.log(params);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,8 +75,6 @@ export default function BuyerScreen() {
     fetchData();
     fetchUser();
   }, [id]);
-
-  console.log(user);
 
   const isUser = (product) => (product.user === user._id);
   const sumRating = products.filter(isUser).map((product) => product.rating).reduce((a, c) => a+c, 0);

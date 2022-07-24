@@ -4,6 +4,7 @@ import expressAsyncHandler from 'express-async-handler';
 import { isAuth, isSeller, isBuyer } from '../utils.js';
 import Order from '../models/orderModel.js';
 import User from '../models/userModel.js';
+import slugify from 'slugify';
 
 const productRouter = express.Router();
 
@@ -65,6 +66,7 @@ productRouter.get('/search', expressAsyncHandler( async (req, res) => {
     ...categoryFilter,
     ...priceFilter,
     ...ratingFilter,
+    type: "listing",
   }).sort(sortOrder);
 
   const countProducts = await Product.countDocuments({
@@ -128,7 +130,14 @@ productRouter.put(
     const product = await Product.findById(productId);
     if (product) {
       product.name = req.body.name;
-      product.slug = req.body.slug;
+      product.slug = slugify(req.body.name, {
+        replacement: '-',  // replace spaces with replacement character, defaults to `-`
+        remove: undefined, // remove characters that match regex, defaults to `undefined`
+        lower: true,      // convert to lower case, defaults to `false`
+        strict: true,     // strip special characters except replacement, defaults to `false`
+        locale: 'vi',       // language code of the locale to use
+        trim: true         // trim leading and trailing replacement chars, defaults to `true`
+      });
       product.price = req.body.price;
       product.image = req.body.image;
       product.category = req.body.category;
@@ -157,8 +166,8 @@ productRouter.put(
       product.price = req.body.price;
       product.image = req.body.image;
       product.category = req.body.category;
-      product.rating = req.body.rating,
-      product.numReviews = req.body.numReviews,
+      product.rating = 0,
+      product.numReviews = 0,
       product.stock = req.body.stock;
       product.description = req.body.description;
       product.user = req.user._id,
@@ -174,8 +183,21 @@ productRouter.put(
 productRouter.put(
   '/request/:id/apply', isAuth, expressAsyncHandler(async (req, res) => {
     const product = await Product.findById(req.params.id).populate('applicant', 'shop');
+    console.log("hello");
+
     if (product) {
       product.applicant = req.user._id;
+      console.log(product);
+      const buyer = await User.findById(product.user);
+      console.log(buyer);
+      const seller = await User.findById(product.applicant);
+      console.log(seller);
+
+      buyer.money -= product.price;
+      seller.money += product.price;
+
+      await buyer.save();
+      await seller.save();
       const updatedProduct = await product.save();
       res.send({ message: 'Applied', product: updatedProduct});
     } else {

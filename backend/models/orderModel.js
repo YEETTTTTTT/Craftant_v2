@@ -18,9 +18,7 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     sellers: [
-      {
-        shop: { type: String, required: true },
-      }
+        { type: String, required: true },
     ],
     shippingAddress: {
       fullName: { type: String, required: true },

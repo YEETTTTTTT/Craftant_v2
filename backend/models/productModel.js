@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import slugify from 'react-slugify';
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -33,6 +34,8 @@ const productSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
+    sales: { type: Number, default: 0},
+    revenue: { type: Number, default: 0},
     reviews: [reviewSchema],
   },
   {

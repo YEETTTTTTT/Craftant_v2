@@ -1,4 +1,4 @@
-import React, { useContext, useState, useReducer } from 'react';
+import React, { useContext, useState, useReducer, useEffect } from 'react';
 import { Store } from '../Store';
 import {Helmet} from 'react-helmet-async';
 import Form from 'react-bootstrap/Form';
@@ -8,8 +8,6 @@ import { getError } from '../utils';
 import axios from 'axios';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
-
-
 
 const reducer = (state, action) => {
   switch(action.type) {
@@ -25,6 +23,12 @@ const reducer = (state, action) => {
       return { ...state, loadingUpload: false, errorUpload: '' };
     case 'UPLOAD_FAIL':
       return { ...state, loadingUpload: false, errorUpload: action.payload };
+    case 'FETCHUSER_REQUEST':
+      return { ...state, loading: true };
+    case 'FETCHUSER_SUCCESS':
+      return { ...state, user: action.payload, loading: false };
+    case 'FETCHUSER_FAIL':
+      return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }
@@ -42,11 +46,30 @@ export default function ProfileScreen() {
   const [logo, setLogo] = useState('');
   const [description, setDescription] = useState(userInfo.description);
   const [handmade, setHandmade] = useState('');
+  const [money, setMoney] = useState(userInfo.money);
 
-  const [{ loadingUpdate, loadingUpload }, dispatch] = useReducer(reducer, {
+  const [{ loadingUpdate, loadingUpload, user }, dispatch] = useReducer(reducer, {
     loadingUpdate: false,
+    user: [],
   });
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      dispatch({type: 'FETCHUSER_REQUEST'});
+      try {
+        const user = await axios.get(
+          '/api/users/profile', {
+            headers: {Authorization: `Bearer ${userInfo.token}`},
+          }
+        );
+        dispatch({type: 'FETCHUSER_SUCCESS', payload: user.data});
+      } catch(err) {
+        dispatch({type: 'FETCHUSER_FAIL'});
+        toast.error(getError(err));
+      }
+    }
+    fetchUser();
+  }, []);
 
   const submitHandler = async(e) => {
     e.preventDefault();
@@ -57,7 +80,7 @@ export default function ProfileScreen() {
         const { data } = await axios.put(
           '/api/users/profile',
           {
-            name, email, password, shop, description, logo, handmade
+            name, email, password, shop, description, logo, handmade, money
           },
           {
             headers: {Authorization: `Bearer ${userInfo.token}`},
@@ -118,17 +141,18 @@ export default function ProfileScreen() {
           {loadingUpload && <LoadingBox />}
         </Form.Group>
 
-        {userInfo.userRole === 'seller' && (
-          <>
             <Form.Group className="mb-3" controlId="description">
-              <Form.Label>Shop Description</Form.Label>
+              <Form.Label>Description</Form.Label>
               <Form.Control
                 onChange={(e) => setDescription(e.target.value)}
                 value= {description}
               />
             </Form.Group>
-          </>
-        )}
+
+        <Form.Group className="mb-3" controlId="money">
+          <Form.Label>Balance</Form.Label>
+          <Form.Control type="text" value={"$"+user.money} disabled/>
+        </Form.Group>
 
         <Form.Group className="mb-3" controlId="email">
           <Form.Label>Email</Form.Label>

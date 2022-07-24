@@ -7,6 +7,7 @@ import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import ProductSeller from '../components/ProductSeller';
 import Card from 'react-bootstrap/Card';
 
 const reducer = (state, action) => {
@@ -17,14 +18,21 @@ const reducer = (state, action) => {
       return { ...state, summary: action.payload, loading: false };
     case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload};
+    case 'PRODUCT_REQUEST':
+      return { ...state, loading: true };
+    case 'PRODUCT_SUCCESS':
+      return { ...state, products: action.payload, loading: false };
+    case 'PRODUCT_FAIL':
+      return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }
 }
 
 export default function DashboardScreen() {
-  const [{ loading, summary, error }, dispatch] = useReducer(reducer, {
+  const [{ loading, summary, error, products }, dispatch] = useReducer(reducer, {
     loading: true,
+    products: [],
     error: '',
   });
 
@@ -44,8 +52,25 @@ export default function DashboardScreen() {
         });
       }
     }
+    const fetchProducts = async() => {
+      dispatch({ type: 'PRODUCT_REQUEST' });
+      try {
+        const result = await axios.get('/api/products');
+        dispatch({ type: 'PRODUCT_SUCCESS', payload: result.data });
+      } catch (err) {
+        dispatch({ type: 'PRODUCT_FAIL', payload: err.message });
+      }
+    }
     fetchData();
+    fetchProducts();
   }, [userInfo]);
+
+    const isShop = (product) => (product.shop === userInfo.shop);
+    const sumRating = products.filter(isShop).map((product) => product.rating).reduce((a, c) => a+c, 0);
+    const avgRating = sumRating/products.filter(isShop).length;
+
+    const sumReviews = products.filter(isShop).map((product) => product.numReviews).reduce((a,c) => a+c, 0);
+
 
   return (
     <div>
@@ -61,11 +86,9 @@ export default function DashboardScreen() {
               <Card>
                 <Card.Body>
                   <Card.Title>
-                    {summary.orders && summary.users[0]
-                      ? summary.orders[0].numOrders
-                      : 0}
+                    {summary.productSales[0].numSales}
                   </Card.Title>
-                  <Card.Text> Orders</Card.Text>
+                  <Card.Text> Total Orders</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -74,49 +97,26 @@ export default function DashboardScreen() {
                 <Card.Body>
                   <Card.Title>
                     $
-                    {summary.orders && summary.users[0]
-                      ? summary.orders[0].totalSales.toFixed(2)
-                      : 0}
+                    {summary.productSales[0].totalRevenue}
                   </Card.Title>
-                  <Card.Text> Revenue</Card.Text>
+                  <Card.Text> Total Revenue</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
           </Row>
-          <div className="my-3">
-            <h2>Sales</h2>
-            {summary.dailyOrders.length === 0 ? (
-              <MessageBox>No Sale</MessageBox>
-            ) : (
-              <Chart
-                width="100%"
-                height="400px"
-                chartType="AreaChart"
-                loader={<div>Loading Chart...</div>}
-                data={[
-                  ['Date', 'Sales'],
-                  ...summary.dailyOrders.map((x) => [x._id, x.sales]),
-                ]}
-              ></Chart>
-            )}
-          </div>
-          <div className="my-3">
-            <h2>Categories</h2>
-            {summary.productCategories.length === 0 ? (
-              <MessageBox>No Category</MessageBox>
-            ) : (
-              <Chart
-                width="100%"
-                height="400px"
-                chartType="PieChart"
-                loader={<div>Loading Chart...</div>}
-                data={[
-                  ['Category', 'Products'],
-                  ...summary.productCategories.map((x) => [x._id, x.count]),
-                ]}
-              ></Chart>
-            )}
-          </div>
+          <br/>
+          <br/>
+          <Row>
+            <Col>
+              <Row>
+                {products.filter(isShop).map((product) => (
+                  <Col key={product.slug} sm={12} md={6} lg={4} className="mb-3">
+                    <ProductSeller product={product}></ProductSeller>
+                  </Col>
+                ))}
+              </Row>
+            </Col>
+          </Row>
         </>
       )}
     </div>

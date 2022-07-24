@@ -10,6 +10,7 @@ import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
+import slugify from 'react-slugify';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -48,7 +49,7 @@ export default function ProductEditScreen() {
   });
 
   const [name, setName] = useState('');
-  const [slug, setSlug] = useState('');
+  const [slug, setSlug] = useState(slugify(''));
   const [price, setPrice] = useState('');
   const [image, setImage] = useState('');
   const [category, setCategory] = useState('');
@@ -158,9 +159,9 @@ export default function ProductEditScreen() {
           <Form.Group className="mb-3" controlId="slug">
             <Form.Label>Slug</Form.Label>
             <Form.Control
-              value={slug}
+              value={slugify(name)}
               onChange={(e) => setSlug(e.target.value)}
-              required
+              required disabled
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="name">

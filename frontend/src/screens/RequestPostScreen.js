@@ -55,8 +55,6 @@ function RequestPostScreen() {
   const [rating, setRating] = useState(0)
   const [comment, setComment] = useState('')
 
-  console.log(params);
-
   const [{ loading, error, product, loadingApply, successApply, loadingCreateReview }, dispatch] = useReducer(reducer, {
     product: [],
     loading: true,
