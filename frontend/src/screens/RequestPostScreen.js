@@ -82,9 +82,7 @@ function RequestPostScreen() {
   async function applyHandler() {
     try {
       dispatch({ type: 'APPLY_REQUEST' });
-      const { data } = await axios.put(`/api/products/request/${product._id}/apply`, {}, {
-        headers: { authorization: `Bearer ${userInfo.token}` },
-      });
+      const { data } = await axios.put(`/api/products/request/${product._id}/apply`);
       dispatch({ type: 'APPLY_SUCCESS' });
       toast.success('Application Successful.');
     } catch(err) {
@@ -181,7 +179,7 @@ function RequestPostScreen() {
                   </Row>
                 </ListGroup.Item>
 
-                {userInfo.userRole === 'seller' && !product.applicant ? (
+                {userInfo && userInfo.userRole === 'seller' && !product.applicant ? (
                   <ListGroup.Item>
                     {loadingApply && <LoadingBox />}
                     <div className="d-grid">
@@ -190,20 +188,22 @@ function RequestPostScreen() {
                       </Button>
                     </div>
                   </ListGroup.Item>
-                ) : product.applicant && userInfo._id != product.user._id ? (
+                ) : userInfo && product.applicant && userInfo._id != product.user._id ? (
                   <ListGroup.Item>
                     <Row>
                       <Col>Chosen Craftsman: </Col>
                       <Col>{product.applicant.shop}</Col>
                     </Row>
                   </ListGroup.Item>
-                ) : userInfo._id === product.user._id && product.applicant ? (
+                ) : userInfo && userInfo._id === product.user._id && product.applicant ? (
                   <ListGroup.Item>
                     <Row>
                       <Col>Your Crafter: </Col>
                       <Col><Link to={`/seller/${product.applicant.shop}`}>{product.applicant.shop}</Link></Col>
                     </Row>
                   </ListGroup.Item>
+                ) : !userInfo ? (
+                  null
                 ) : (
                   null
                 )}
