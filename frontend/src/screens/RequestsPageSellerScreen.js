@@ -82,7 +82,7 @@ export default function RequestsPageSellerScreen() {
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => (
+              {products.filter(isCrafter).map((product) => (
                 <tr key={product._id}>
                   <td>#{product._id}</td>
                   <td>{product.name}</td>
