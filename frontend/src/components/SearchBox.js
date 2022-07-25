@@ -18,7 +18,7 @@ export default function SearchBox() {
     <Form className="d-flex me-auto" id="search-box-form" onSubmit={submitHandler}>
       <InputGroup>
         <Form.Control type="text" name="q" id="q" onChange={(e) => setQuery(e.target.value)} placeholder="Search Products" aria-Label="Search Products" aria-describedby="button-search" />
-        <Button variant="outline-primary" type="submit" id="button-search">
+        <Button variant="outline-primary" type="submit" id="button-search" className="search-box">
           <i className="fas fa-search" />
         </Button>
       </InputGroup>

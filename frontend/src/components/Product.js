@@ -1,10 +1,11 @@
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
+import { Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Rating from './Rating';
 import axios from 'axios';
 import { useContext } from 'react';
 import { Store } from '../Store';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/styles.css'
 
 function Product(props) {
   const { product } = props;
@@ -29,7 +30,7 @@ function Product(props) {
   };
 
   return (
-    <Card style={{border: "1px solid grey"}}>
+    <Card styles="1px solid grey">
       <Link to={`/product/${product.slug}`}>
         <img src={product.image} className="card-img-top" alt={product.name} />
       </Link>

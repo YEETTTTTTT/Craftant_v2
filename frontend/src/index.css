@@ -1,3 +1,16 @@
+:root {
+  --purple-color: hsl(266, 100%, 64%);
+  --btn-color: hsl(309, 100%, 93%);
+  --text-color-default: hsl(0, 100%, 74%);
+  --border-color: hsl(20, 100%, 71%);
+}
+
+@import url('https://rsms.me/inter/inter.css');
+html { font-family: 'Inter', sans-serif; }
+@supports (font-variation-settings: normal) {
+  html { font-family: 'Inter var', sans-serif; }
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,18 +18,65 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: linear-gradient(to top, #fed6e3 0%, #a8edea 100%);
+  background-image: linear-gradient(to top, #f9f4ef 0%, #fff9ec 100%);
+  color:hsl(0, 100%, 74%);
 
 }
+
+h1 {
+  color: var(--text-color-default);
+  font-weight: bold;
+}
+
+h4 {
+  font-size: 18px;
+}
+
+select {
+  background-color: white;
+  padding: 0.3rem;
+  border-radius: 10px;
+  border-style: solid;
+  border-color: var(--border-color);
+}
+
+.dot {
+  margin-right: 0.5rem;
+}
+
+a {
+  text-decoration: none;
+  color:var(--text-color-default);
+}
+
+ul li {
+  list-style-type: none;
+}
+
+a:hover {
+  color:var(--purple-color);
+  font-weight: bold;
+}
+
 .site-container {
   min-height: 100vh;
+}
+
+.list-group {
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
 }
 main {
   flex: 1;
 }
 .btn-primary {
-  background-color: #ffcccc;
-  color: #000000;
+  background-color: var(--btn-color);
+  color: rgb(255, 121, 121);
+  border: 1px solid var(--border-color);
+}
+.btn-primary:hover {
+  background-color: var(--purple-color);
+  border: 2px solid var(--purple-color);
 }
 
 Form {
@@ -32,6 +92,24 @@ Form {
   box-shadow: none;
 }
 
+.search-box {
+  border-color:hsl(0, 100%, 74%);
+}
+
+.search-box:hover {
+  border-color:hsl(0, 100%, 74%);
+  background-color:hsl(0, 100%, 74%);
+  color:white;
+}
+
+.fa-search {
+  color:hsl(0, 100%, 74%);
+}
+
+.fa-search:hover {
+  color: white;
+}
+
 .register-btn {
   margin-top: 4%;
   font-size: 20px;
@@ -43,12 +121,32 @@ Form {
   justify-content: center;
 }
 
-.user-card {
-  height:400px;
+.card {
+  min-height: 100%;
+  border: 1px solid var(--border-color);
 }
 
-.request-card {
+.card:hover {
+  box-shadow: 0 2px 6px 0 rgba(222, 222, 222, 0.2), 0 6px 20px 0 rgba(109, 109, 109, 0.19);
+}
 
+.card-title {
+  text-decoration: none;
+  color: var(--text-color-default);
+  font-weight: normal;
+}
+.card-title:hover {
+  color: var(--purple-color);
+  font-weight: bold;
+}
+
+.input-group {
+  border-color:hsl(266, 100%, 64%);
+}
+
+@import url('https://fonts.googleapis.com/css?family=Lato:400,700');
+.user-card {
+  height: 400px;
 }
 
 #check-review {
@@ -66,11 +164,14 @@ Form {
 
 .card-img-top {
   width: 100%;
-  height: 20rem;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+
 }
 
 .product {
-  border: 1px #404040 solid;
+  border: 0.6px #404040 solid;
   margin: 1rem;
 }
 .product img {
@@ -90,7 +191,7 @@ Form {
 
 .seller-logo {
   display: block;
-  max-width: 50%;
+  max-width: 60%;
   margin-left: auto;
   margin-right: auto;
   padding-top: 3%;
@@ -126,6 +227,7 @@ Form {
 
 @import url('https://fonts.googleapis.com/css2?family=Della+Respira&display=swap');
 
+
 .navbar-brand {
   font-weight: bold;
   font-family: 'Della Respira', serif;
@@ -133,8 +235,10 @@ Form {
 }
 
 .della-font-headers {
-  font-family: 'Della Respira', serif;
+  font-family: 'Inter', serif;
   font-weight: bold;
+  color: hsl(0, 100%, 74%);
+  margin: 1rem 0rem 2rem 0rem;
 }
 
 .order-history-box {
@@ -147,15 +251,34 @@ Form {
   color: orange;
 }
 
+.navbar {
+  border-bottom: 1px solid #a0a0a0;
+  background-color: #fff3ec;
+}
 .side-navbar {
   width: 240px;
   height: 100%;
   position: absolute;
   left: -300px;
-  background-color: #100901;
+  background-color: #fff3ec;
   transition: 0.5s;
+  border: 1px solid var(--border-color);
 }
 
+.nav-item {
+  color: var(--text-color-default);
+  font-weight: bold;
+  font-family: 'Inter';
+}
+
+.nav-link {
+  color:hsl(266, 100%, 64%);
+  font-weight: normal;
+}
+
+.nav-link:hover {
+  color:var(--text-color-default);
+}
 .site-container {
   transition: 0.4s;
 }
@@ -200,7 +323,7 @@ Form {
   margin: 0 5px;
   border-radius: 5px;
   cursor: pointer;
-  padding: 0 30px;
+  padding: 0 1.5rem;
   border: 2px solid lightgrey;
   transition: all 0.3s ease;
 }
@@ -218,7 +341,7 @@ Form {
   left: 4px;
   width: 12px;
   height: 12px;
-  background: orange;
+  background: var(--purple-color);
   border-radius: 50%;
   opacity: 0;
   transform: scale(1.5);
