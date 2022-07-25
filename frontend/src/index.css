@@ -281,7 +281,7 @@ Form {
 
 #navbarBtn {
   background-color: var(--text-color-default);
-  colro: white;
+  color: white;
 }
 .fa-bars {
   color:white;
