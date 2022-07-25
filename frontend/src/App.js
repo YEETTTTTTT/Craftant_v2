@@ -74,7 +74,7 @@ function App() {
       <div className={sidebarIsOpen ? "d-flex flex-column site-container active-cont" : "d-flex flex-column site-container"}>
       <ToastContainer position="bottom-center" limit={1} />
         <header>
-          <Navbar bg="light" variant="light" expand="lg">
+          <Navbar variant="light" expand="lg">
             <Container>
             <Button variant="light" onClick={() => setSidebarIsOpen(!sidebarIsOpen)}>
               <i className="fas fa-bars" />
@@ -87,7 +87,7 @@ function App() {
                 <SearchBox />
                 <Nav className="me-auto w-100 justify-content-end">
                 {userInfo && userInfo.userRole === 'buyer' ? (
-                  <Link to="/cart" className="nav-link">
+                  <Link to="/cart" className="nav-link" id="navlink">
                     Cart
                     {cart.cartItems.length > 0 && (
                       <Badge pill bg="danger">
@@ -101,31 +101,31 @@ function App() {
                   {userInfo ? (
                     <NavDropdown title={`Welcome, ${userInfo.name}`} id="basic-nav-dropdown">
                       <LinkContainer to="/profile">
-                        <NavDropdown.Item>User Profile</NavDropdown.Item>
+                        <NavDropdown.Item id="navItem">User Profile</NavDropdown.Item>
                       </LinkContainer>
                       {userInfo.userRole === 'buyer' ? (
                         <>
                         <LinkContainer to="/orderhistory">
-                          <NavDropdown.Item>Order History</NavDropdown.Item>
+                          <NavDropdown.Item id="navItem">Order History</NavDropdown.Item>
                         </LinkContainer>
 
                         <LinkContainer to="/buyer/request">
-                          <NavDropdown.Item>Product Requests</NavDropdown.Item>
+                          <NavDropdown.Item id="navItem">Product Requests</NavDropdown.Item>
                         </LinkContainer>
 
                         <LinkContainer to={`/buyer/${userInfo._id}`}>
-                          <NavDropdown.Item>Profile Page</NavDropdown.Item>
+                          <NavDropdown.Item id="navItem">Profile Page</NavDropdown.Item>
                         </LinkContainer>
                         </>
                       ) : userInfo.userRole === 'seller' ? (
                           <LinkContainer to="/seller/verification">
-                            <NavDropdown.Item>Verification</NavDropdown.Item>
+                            <NavDropdown.Item id="navItem">Verification</NavDropdown.Item>
                           </LinkContainer>
                       ) : (
                         null
                       )}
                       <NavDropdown.Divider />
-                        <Link className="dropdown-item" to="#signout" onClick={signoutHandler}>Sign Out</Link>
+                        <Link className="dropdown-item" to="#signout" onClick={signoutHandler} id="navItem">Sign Out</Link>
                     </NavDropdown>
                   ):(
                     <Link className="nav-link" to="/signin">

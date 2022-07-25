@@ -23,9 +23,17 @@ body {
 
 }
 
+.badge {
+  margin-left: 0.2rem;
+}
+
 h1 {
   color: var(--text-color-default);
   font-weight: bold;
+}
+
+h3 {
+  font-size: 20px;
 }
 
 h4 {
@@ -88,17 +96,23 @@ Form {
 }
 
 #search-box-form {
-  background-color: #F8F9FA;
+  background-color: var(--text-color-default);
   box-shadow: none;
 }
 
+#q {
+  border-color:var(--text-color-default);
+  color:var(--text-color-default);
+}
+
 .search-box {
-  border-color:hsl(0, 100%, 74%);
+  border-color:var(--text-color-default);
+  background-color: white;
 }
 
 .search-box:hover {
-  border-color:hsl(0, 100%, 74%);
-  background-color:hsl(0, 100%, 74%);
+  border-color:var(--text-color-default);
+  background-color:var(--purple-color);
   color:white;
 }
 
@@ -125,6 +139,12 @@ Form {
   min-height: 100%;
   border: 1px solid var(--border-color);
 }
+
+#card-2 {
+  min-height: 20%;
+  max-height: 100%;
+}
+
 
 .card:hover {
   box-shadow: 0 2px 6px 0 rgba(222, 222, 222, 0.2), 0 6px 20px 0 rgba(109, 109, 109, 0.19);
@@ -221,12 +241,11 @@ Form {
 }
 
 .checkout-steps > div.active {
-  border-bottom: 0.2rem solid #f08000;
-  color: #f08000;
+  border-bottom: 0.2rem solid var(--purple-color);
+  color: var(--purple-color);
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Della+Respira&display=swap');
-
 
 .navbar-brand {
   font-weight: bold;
@@ -253,8 +272,10 @@ Form {
 
 .navbar {
   border-bottom: 1px solid #a0a0a0;
-  background-color: #fff3ec;
+  background-color: var(--text-color-default);
+  color: white;
 }
+
 .side-navbar {
   width: 240px;
   height: 100%;
@@ -269,6 +290,10 @@ Form {
   color: var(--text-color-default);
   font-weight: bold;
   font-family: 'Inter';
+}
+
+#navlink {
+  color: white;
 }
 
 .nav-link {
@@ -289,6 +314,14 @@ Form {
 
 .active-nav {
   left: 0;
+}
+
+#basic-nav-dropdown {
+  color: white;
+}
+
+#navItem {
+  color: var(--text-color-default);
 }
 
 /* buyer seller toggle Button */
