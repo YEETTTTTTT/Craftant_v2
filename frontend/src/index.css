@@ -1,6 +1,6 @@
 :root {
   --purple-color: hsl(266, 100%, 64%);
-  --btn-color: hsl(309, 100%, 93%);
+  --btn-color: hsl(0, 100%, 80%);
   --text-color-default: hsl(0, 100%, 74%);
   --border-color: hsl(20, 100%, 71%);
 }
@@ -79,7 +79,7 @@ main {
 }
 .btn-primary {
   background-color: var(--btn-color);
-  color: rgb(255, 121, 121);
+  color: white;
   border: 1px solid var(--border-color);
 }
 .btn-primary:hover {
@@ -274,6 +274,25 @@ Form {
   border-bottom: 1px solid #a0a0a0;
   background-color: var(--text-color-default);
   color: white;
+}
+
+#navbarBtn {
+  background-color: var(--text-color-default);
+  colro: white;
+}
+.fa-bars {
+  color:white;
+  background-color: var(--text-color-default);
+}
+
+a.active.navbar-brand{
+  margin-left:1rem;
+  color: white;
+}
+
+a.active.navbar-brand:hover {
+  color:var(--purple-color);
+  font-weight: bold;;
 }
 
 .side-navbar {

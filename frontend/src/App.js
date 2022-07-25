@@ -76,7 +76,7 @@ function App() {
         <header>
           <Navbar variant="light" expand="lg">
             <Container>
-            <Button variant="light" onClick={() => setSidebarIsOpen(!sidebarIsOpen)}>
+            <Button id="navbarBtn" onClick={() => setSidebarIsOpen(!sidebarIsOpen)}>
               <i className="fas fa-bars" />
             </Button>
               <LinkContainer to="/">
