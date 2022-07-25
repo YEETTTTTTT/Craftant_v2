@@ -183,7 +183,6 @@ productRouter.put(
 productRouter.put(
   '/request/:id/apply', isAuth, expressAsyncHandler(async (req, res) => {
     const product = await Product.findById(req.params.id).populate('applicant', 'shop');
-    console.log("hello");
 
     if (product) {
       product.applicant = req.user._id;

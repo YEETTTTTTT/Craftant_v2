@@ -53,7 +53,7 @@ export default function RequestsPageSellerScreen() {
     fetchData();
   }, [userInfo]);
 
-  const isCrafter = (product) => (product.applicant.shop === userInfo.shop);
+  const isCrafter = (product) => (product.applicant && product.applicant.shop === userInfo.shop);
 
   return (
     <div className="order-history-box">
