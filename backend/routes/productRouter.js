@@ -181,16 +181,13 @@ productRouter.put(
 );
 
 productRouter.put(
-  '/request/:id/apply', isAuth, expressAsyncHandler(async (req, res) => {
+  '/request/:id/apply', isAuth, isSeller, expressAsyncHandler(async (req, res) => {
     const product = await Product.findById(req.params.id).populate('applicant', 'shop');
 
     if (product) {
       product.applicant = req.user._id;
-      console.log(product);
       const buyer = await User.findById(product.user);
-      console.log(buyer);
       const seller = await User.findById(product.applicant);
-      console.log(seller);
 
       buyer.money -= product.price;
       seller.money += product.price;
@@ -254,6 +251,7 @@ productRouter.post(
 productRouter.post(
   '/request/:id/reviews',
   isAuth,
+  isSeller,
   expressAsyncHandler(async(req, res) => {
       const productId = req.params.id;
       const product = await Product.findById(productId).populate('applicant', 'shop');

@@ -82,7 +82,9 @@ function RequestPostScreen() {
   async function applyHandler() {
     try {
       dispatch({ type: 'APPLY_REQUEST' });
-      const { data } = await axios.put(`/api/products/request/${product._id}/apply`);
+      const { data } = await axios.put(`/api/products/request/${product._id}/apply`, {}, {
+        headers: { authorization: `Bearer ${userInfo.token}` },
+      });
       dispatch({ type: 'APPLY_SUCCESS' });
       toast.success('Application Successful.');
     } catch(err) {

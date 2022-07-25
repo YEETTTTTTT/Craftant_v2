@@ -21,6 +21,7 @@ export const generateToken = (user) => {
 };
 
 export const isAuth = (req, res, next) => {
+  console.log(req.headers.authorization);
   const authorization = req.headers.authorization;
   if (authorization) {
     const token = authorization.slice(7, authorization.length);
