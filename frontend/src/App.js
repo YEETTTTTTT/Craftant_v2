@@ -136,27 +136,27 @@ function App() {
                   {userInfo && userInfo.userRole === 'seller' && (
                     <NavDropdown title="Admin" id="admin-nav-dropdown">
                       <LinkContainer to="/seller/dashboard">
-                        <NavDropdown.Item>Dashboard</NavDropdown.Item>
+                        <NavDropdown.Item id="navItem">Dashboard</NavDropdown.Item>
                       </LinkContainer>
 
                       <LinkContainer to="/seller/products">
-                        <NavDropdown.Item>Products</NavDropdown.Item>
+                        <NavDropdown.Item id="navItem">Products</NavDropdown.Item>
                       </LinkContainer>
 
                       <LinkContainer to="/seller/orders">
-                        <NavDropdown.Item>Orders</NavDropdown.Item>
+                        <NavDropdown.Item id="navItem">Orders</NavDropdown.Item>
                       </LinkContainer>
 
                       <LinkContainer to="/seller/orders/history">
-                        <NavDropdown.Item>Order History</NavDropdown.Item>
+                        <NavDropdown.Item id="navItem">Order History</NavDropdown.Item>
                       </LinkContainer>
 
                       <LinkContainer to={userInfo.shop ? `/seller/${userInfo.shop}` : "/profile"}>
-                        <NavDropdown.Item>Shop</NavDropdown.Item>
+                        <NavDropdown.Item id="navItem">Shop</NavDropdown.Item>
                       </LinkContainer>
 
                       <LinkContainer to="/seller/request">
-                        <NavDropdown.Item>Requests</NavDropdown.Item>
+                        <NavDropdown.Item id="navItem">Requests</NavDropdown.Item>
                       </LinkContainer>
 
                     </NavDropdown>
