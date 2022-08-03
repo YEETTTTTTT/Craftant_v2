@@ -20,6 +20,7 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [userRole, setUserRole] = useState('');
+  const [money, setMoney] = useState('');
 
   const {state, dispatch: ctxDispatch } = useContext(Store);
   const {userInfo} = state;
@@ -60,6 +61,7 @@ export default function RegisterScreen() {
           email,
           password,
           userRole,
+          money,
         });
         ctxDispatch({type: 'USER_SIGNIN', payload: data})
         localStorage.setItem('userInfo', JSON.stringify(data));

@@ -101,7 +101,7 @@ export default function ProductListScreen() {
         await axios.delete(`/api/products/${product._id}`, {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
-        toast.success("Product deleted");
+        toast.success("Order Refunded!");
         dispatch({type: 'DELETE_SUCCESS'});
       } catch(err) {
         toast.error(getError(err));
@@ -158,6 +158,7 @@ export default function ProductListScreen() {
                     <Button type="button" variant="light" onClick={() => navigate(`/seller/product/${product._id}`)}>
                       Edit
                     </Button>
+                    &nbsp;
                     <Button type="button" variant="light" onClick={() => {
                       navigate(`/product/${product.slug}`);
                     }}>

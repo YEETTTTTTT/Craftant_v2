@@ -33,6 +33,7 @@ import RequestPostScreen from './screens/RequestPostScreen';
 import DashboardScreen from './screens/DashboardScreen';
 import VerificationScreen from './screens/VerificationScreen';
 import ProductRequestScreen from './screens/ProductRequestScreen';
+import FavouritesPage from './screens/FavouritesPage';
 import RequestsPageSellerScreen from './screens/RequestsPageSellerScreen';
 import SellerScreen from './screens/SellerScreen';
 import SearchBox from './components/SearchBox';
@@ -101,7 +102,7 @@ function App() {
                   {userInfo ? (
                     <NavDropdown title={`Welcome, ${userInfo.name}`} id="basic-nav-dropdown">
                       <LinkContainer to="/profile">
-                        <NavDropdown.Item>User Profile</NavDropdown.Item>
+                        <NavDropdown.Item>Account Settings</NavDropdown.Item>
                       </LinkContainer>
                       {userInfo.userRole === 'buyer' ? (
                         <>
@@ -114,7 +115,11 @@ function App() {
                         </LinkContainer>
 
                         <LinkContainer to={`/buyer/${userInfo._id}`}>
-                          <NavDropdown.Item>Profile Page</NavDropdown.Item>
+                          <NavDropdown.Item>My Page</NavDropdown.Item>
+                        </LinkContainer>
+
+                        <LinkContainer to={`/buyer/${userInfo._id}/favourites`}>
+                          <NavDropdown.Item>My Favourites ♡</NavDropdown.Item>
                         </LinkContainer>
                         </>
                       ) : userInfo.userRole === 'seller' ? (
@@ -135,28 +140,36 @@ function App() {
 
                   {userInfo && userInfo.userRole === 'seller' && (
                     <NavDropdown title="Admin" id="admin-nav-dropdown">
-                      <LinkContainer to="/seller/dashboard">
-                        <NavDropdown.Item>Dashboard</NavDropdown.Item>
-                      </LinkContainer>
+                     {userInfo.shop ? (
+                        <LinkContainer to="/seller/dashboard">
+                          <NavDropdown.Item>Dashboard</NavDropdown.Item>
+                        </LinkContainer>
+                      ) : (
+                        <NavDropdown.Item onClick={(e) => toast.error("Please set up your shop in Account Settings first.")}>Dashboard</NavDropdown.Item>
+                      )}
 
                       <LinkContainer to="/seller/products">
-                        <NavDropdown.Item>Products</NavDropdown.Item>
+                        <NavDropdown.Item>My Products</NavDropdown.Item>
                       </LinkContainer>
 
                       <LinkContainer to="/seller/orders">
-                        <NavDropdown.Item>Orders</NavDropdown.Item>
+                        <NavDropdown.Item>Pending Orders</NavDropdown.Item>
                       </LinkContainer>
 
                       <LinkContainer to="/seller/orders/history">
                         <NavDropdown.Item>Order History</NavDropdown.Item>
                       </LinkContainer>
 
-                      <LinkContainer to={userInfo.shop ? `/seller/${userInfo.shop}` : "/profile"}>
-                        <NavDropdown.Item>Shop</NavDropdown.Item>
-                      </LinkContainer>
+                      {userInfo.shop ? (
+                        <LinkContainer to={`/seller/${userInfo.shop}`}>
+                          <NavDropdown.Item>My Shop</NavDropdown.Item>
+                        </LinkContainer>
+                      ) : (
+                        <NavDropdown.Item onClick={(e) => toast.error("Please set up your shop in Account Settings first.")}>My Shop</NavDropdown.Item>
+                      )}
 
                       <LinkContainer to="/seller/request">
-                        <NavDropdown.Item>Requests</NavDropdown.Item>
+                        <NavDropdown.Item>Applied Requests</NavDropdown.Item>
                       </LinkContainer>
 
                     </NavDropdown>
@@ -204,6 +217,7 @@ function App() {
               <Route path="/orderhistory" element={<BuyerRoute><OrderHistoryScreen /></BuyerRoute>} />
               <Route path="/payment" element={<BuyerRoute><PaymentMethodScreen /></BuyerRoute>} />
               <Route path="/buyer/request" element={<BuyerRoute><ProductRequestScreen /></BuyerRoute>} />
+              <Route path="/buyer/:id/favourites" element={<BuyerRoute><FavouritesPage /></BuyerRoute>} />
               <Route path="/buyer/:id" element={<BuyerScreen />} />
               <Route path="/buyer/request/:id" element={<BuyerRoute><RequestEditScreen /></BuyerRoute>} />
 
@@ -220,7 +234,7 @@ function App() {
           </Container>
         </main>
         <footer>
-          <div className="text-center">All rights reserved</div>
+          <div className="text-center">All rights reserved - Craftant</div>
         </footer>
       </div>
     </BrowserRouter>

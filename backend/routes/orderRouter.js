@@ -18,7 +18,6 @@ orderRouter.post(
     const user = await User.findById(req.user._id);
 
     if (user.money >= req.body.totalPrice) {
-
       const orderItems = req.body.orderItems.map((x) => ({ ...x, product: x._id }));
       const orderRevenue = req.body.orderItems.map(x => x.quantity*x.price);
       const orderQuantity = req.body.orderItems.map(x => x.quantity);
@@ -26,20 +25,23 @@ orderRouter.post(
       const sellersSet = [...new Set(orderItems.map(x => x.shop))];
       const sellersArray = Object.values(sellersSet);
 
-      const slugArray = [...new Set(orderItems.map(x => x.slug))];
+      const slugArray = orderItems.map(x => x.slug);
 
-      const product = await Product.find({slug: { $in: slugArray}});
+      const productsArr = [];
 
-      const sellers = await User.find({shop: { $in: sellersSet}});
-      console.log(sellers);
+      for (var j = 0; j < slugArray.length; j++) {
+        const product = await Product.findOne({slug: slugArray[j]});
+        productsArr.push(product);
+      }
 
-      for (var i = 0; i < slugArray.length; i++) {
-        product[i].revenue += orderRevenue[i];
-        product[i].sales += orderQuantity[i];
-        product[i].stock -= orderQuantity[i];
-        sellers[i].money += orderRevenue[i];
-        await product[i].save();
-        await sellers[i].save();
+      for (var i = 0; i < productsArr.length; i++) {
+        productsArr[i].revenue += orderRevenue[i];
+        productsArr[i].sales += orderQuantity[i];
+        productsArr[i].stock -= orderQuantity[i];
+        const seller = await User.findOne({shop: productsArr[i].shop});
+        seller.money += orderRevenue[i];
+        await productsArr[i].save();
+        await seller.save();
       }
 
       const newOrder = new Order({
@@ -54,7 +56,6 @@ orderRouter.post(
       });
 
       const order = await newOrder.save();
-
       user.money -= newOrder.totalPrice;
       await user.save();
 
@@ -101,6 +102,44 @@ orderRouter.get(
 
   })
 );
+
+orderRouter.delete('/:id', isAuth, expressAsyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (order) {
+    const user = await User.findById(req.user._id);
+    const orderItems = order.orderItems.map((x) => x.slug);
+    const orderRevenue = order.orderItems.map(x => x.price*x.quantity);
+    const orderQuantity = order.orderItems.map(x => x.quantity);
+    const productsArr = [];
+
+    for (var j = 0; j < orderItems.length; j++) {
+      const product = await Product.findOne({slug: orderItems[j]});
+      productsArr.push(product);
+    }
+
+    for (var i = 0; i < productsArr.length; i++) {
+      productsArr[i].revenue -= orderRevenue[i];
+      productsArr[i].sales -= orderQuantity[i];
+      productsArr[i].stock += orderQuantity[i];
+      const seller = await User.findOne({shop: productsArr[i].shop});
+      seller.money -= orderRevenue[i];
+      await productsArr[i].save();
+      await seller.save();
+    }
+
+    user.money += order.totalPrice;
+    await user.save();
+
+    await order.remove();
+
+    res.send({message: 'Order Refunded'});
+  } else {
+    res.status(404).send({message: 'Order Not Found'});
+  }
+
+
+}));
 
 orderRouter.put(
   '/:id/payment', isAuth, expressAsyncHandler(async (req, res) => {

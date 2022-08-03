@@ -2,6 +2,7 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import expressAsyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
+import Product from '../models/productModel.js';
 import { generateToken, isAuth } from '../utils.js';
 import mongoose from 'mongoose';
 
@@ -67,6 +68,19 @@ userRouter.get(
   })
 )
 
+userRouter.get(
+  '/buyer/:id/favourites',
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id);
+    const products = await Product.find({_id: { $in: user.favourites}});
+    if (user) {
+      res.send({user, products});
+    } else {
+      res.status(404).send({message: "User not Found."});
+    }
+  })
+);
 
 userRouter.post(
   '/signin',
@@ -122,7 +136,7 @@ userRouter.put(
   isAuth,
   expressAsyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id);
-
+    console.log(req.body);
     if (user) {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
@@ -131,6 +145,12 @@ userRouter.put(
       user.logo = req.body.logo || user.logo;
       user.description = req.body.description;
       user.money = user.money;
+      if (req.body.favourites) {
+        if (!user.favourites.includes(req.body.favourites[0])) {
+          user.favourites.push(req.body.favourites[0]);
+          console.log("pushed");
+        }
+      }
       if (req.body.password) {
         user.password = bcrypt.hashSync(req.body.password, 8);
       }
@@ -146,6 +166,7 @@ userRouter.put(
         logo: updatedUser.logo,
         description: updatedUser.description,
         money: updatedUser.money,
+        favourites: updatedUser.favourites,
         token: generateToken(updatedUser),
       });
     } else {

@@ -86,7 +86,7 @@ export default function DashboardScreen() {
               <Card>
                 <Card.Body>
                   <Card.Title>
-                    {summary.productSales[0].numSales}
+                    {summary.productSales[0] ? summary.productSales[0].numSales : 0}
                   </Card.Title>
                   <Card.Text> Total Orders</Card.Text>
                 </Card.Body>
@@ -97,7 +97,7 @@ export default function DashboardScreen() {
                 <Card.Body>
                   <Card.Title>
                     $
-                    {summary.productSales[0].totalRevenue}
+                    {summary.productSales[0] ? summary.productSales[0].totalRevenue : 0}
                   </Card.Title>
                   <Card.Text> Total Revenue</Card.Text>
                 </Card.Body>

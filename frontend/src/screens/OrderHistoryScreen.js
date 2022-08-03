@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getError } from '../utils';
 import Button from 'react-bootstrap/Button';
+import { toast } from 'react-toastify';
 
 
 const reducer = (state, action) => {
@@ -17,6 +18,14 @@ const reducer = (state, action) => {
       return { ...state, orders: action.payload, loading: false };
     case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
+    case 'DELETE_REQUEST':
+      return { ...state, loadingDelete: true, successDelete: false };
+    case 'DELETE_SUCCESS':
+      return { ...state, loadingDelete: false, successDelete: true };
+    case 'DELETE_FAIL':
+      return { ...state, loadingDelete: false, successDelete: false };
+    case 'DELETE_RESET':
+      return { ...state, loadingDelete: false, successDelete: false };
     default:
       return state;
   }
@@ -29,11 +38,9 @@ export default function OrderHistoryScreen() {
   const { userInfo } = state;
   const navigate = useNavigate();
 
-  console.log(userInfo._id);
-
   const isUser = (order) => (order.user === userInfo._id)
 
-  const [{loading, error, orders}, dispatch] = useReducer(reducer, {
+  const [{loading, error, orders, loadingDelete, successDelete}, dispatch] = useReducer(reducer, {
     loading: true,
     error: '',
   });
@@ -54,8 +61,27 @@ export default function OrderHistoryScreen() {
         });
       }
     };
-    fetchData();
-  }, [userInfo]);
+    if (successDelete) {
+      dispatch({type: 'DELETE_RESET'});
+    } else {
+      fetchData();
+    }
+  }, [userInfo, successDelete]);
+
+  const refundHandler = async (order) => {
+    if (window.confirm("Refund Order?")) {
+      try {
+        await axios.delete(`/api/orders/${order._id}`, {
+          headers: { authorization: `Bearer ${userInfo.token}` },
+        });
+        toast.success("Order Refunded");
+        dispatch({type: 'DELETE_SUCCESS'});
+      } catch(err) {
+        toast.error(getError(err));
+        dispatch({type: 'DELETE_FAIL'});
+      }
+    }
+  }
 
   return (
     <div className="order-history-box">
@@ -91,6 +117,9 @@ export default function OrderHistoryScreen() {
                   <Button type="button" variant="light" onClick={() => {
                     navigate(`/order/${order._id}`);
                   }}>Details
+                  </Button>
+                  &nbsp;
+                  <Button type="button" variant="light" onClick={() => refundHandler(order)}>Refund
                   </Button>
                 </td>
               </tr>

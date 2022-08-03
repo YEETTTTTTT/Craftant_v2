@@ -22,6 +22,7 @@ export default function SigninScreen() {
   const [logo, setLogo] = useState('');
   const [description, setDescription] = useState('');
   const [handmade, setHandmade] = useState('');
+  const [money, setMoney] = useState('');
 
   const {state, dispatch: ctxDispatch } = useContext(Store);
   const {userInfo} = state;
@@ -61,7 +62,8 @@ export default function SigninScreen() {
         shop,
         name,
         handmade,
-        logo
+        logo,
+        money
       });
       ctxDispatch({type: 'USER_SIGNIN', payload: data})
       localStorage.setItem('userInfo', JSON.stringify(data));

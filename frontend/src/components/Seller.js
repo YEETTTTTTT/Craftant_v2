@@ -15,7 +15,7 @@ function Seller(props) {
         <Link to={`/seller/${seller.shop}`}>
           <Card.Title className="mb-3"><strong>{seller.shop}</strong></Card.Title>
         </Link>
-        <img src={seller.logo} className="seller-logo"/>
+        <Link to={`/seller/${seller.shop}`}><img src={seller.logo} className="seller-logo"/></Link>
 
         <Card.Text className="mt-3">
         <strong> About {seller.shop}: </strong>

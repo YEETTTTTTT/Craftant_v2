@@ -12,6 +12,9 @@ const userSchema = new mongoose.Schema(
     logo: {type: String, default: "/images/icon.jpg"},
     description: { type: String },
     money: { type: Number, default: 2000},
+    favourites: [
+        { type: String, unique: true },
+    ],
   },
   {
     timestamps: true
