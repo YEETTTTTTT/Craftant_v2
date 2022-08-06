@@ -75,13 +75,13 @@ function App() {
       <div className={sidebarIsOpen ? "d-flex flex-column site-container active-cont" : "d-flex flex-column site-container"}>
       <ToastContainer position="bottom-center" limit={1} />
         <header>
-          <Navbar bg="light" variant="light" expand="lg">
+          <Navbar variant="light" expand="lg">
             <Container>
             <Button variant="light" onClick={() => setSidebarIsOpen(!sidebarIsOpen)}>
               <i className="fas fa-bars" />
             </Button>
               <LinkContainer to="/">
-                <Navbar.Brand>Craftant</Navbar.Brand>
+                <Navbar.Brand id="craftant">Craftant</Navbar.Brand>
               </LinkContainer>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
@@ -100,9 +100,9 @@ function App() {
                   null
                 )}
                   {userInfo ? (
-                    <NavDropdown title={`Welcome, ${userInfo.name}`} id="basic-nav-dropdown">
+                    <NavDropdown title={`Welcome, ${userInfo.name}`} id="dropdown">
                       <LinkContainer to="/profile">
-                        <NavDropdown.Item>Account Settings</NavDropdown.Item>
+                        <NavDropdown.Item className="dropdown-item">Account Settings</NavDropdown.Item>
                       </LinkContainer>
                       {userInfo.userRole === 'buyer' ? (
                         <>
@@ -139,7 +139,7 @@ function App() {
                   )}
 
                   {userInfo && userInfo.userRole === 'seller' && (
-                    <NavDropdown title="Admin" id="admin-nav-dropdown">
+                    <NavDropdown title="Admin" id="dropdown">
                      {userInfo.shop ? (
                         <LinkContainer to="/seller/dashboard">
                           <NavDropdown.Item>Dashboard</NavDropdown.Item>

@@ -23,6 +23,19 @@ body {
 
 }
 
+.fa-times-circle {
+  color: var(--purple-color);
+}
+
+#craftant {
+  color: white;
+  margin-left: 2rem;
+}
+
+#craftant:hover {
+  color: var(--purple-color);
+}
+
 .badge {
   margin-left: 0.2rem;
 }
@@ -95,6 +108,7 @@ Form {
   background-color: white;
 }
 
+
 #search-box-form {
   background-color: var(--text-color-default);
   box-shadow: none;
@@ -145,8 +159,15 @@ Form {
   max-height: 100%;
 }
 
-#admin-nav-dropdown {
-  color: black;
+#dropdown {
+  color: white;
+}
+
+.dropdown-item {
+  color: var(--btn-color);
+}
+.dropdown-item:hover {
+  color: var(--purple-color);
 }
 
 .card:hover {
@@ -280,6 +301,7 @@ Form {
   background-color: white;
   border-radius: 20px;
   padding: 1.5rem;
+  border: 1px solid var(--border-color);
 }
 
 #user-role-color {
@@ -348,10 +370,6 @@ a.active.navbar-brand:hover {
 
 .active-nav {
   left: 0;
-}
-
-#basic-nav-dropdown {
-  color: black;
 }
 
 #navItem {

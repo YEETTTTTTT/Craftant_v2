@@ -114,12 +114,12 @@ export default function OrderHistoryScreen() {
                 <td>{order.isPaid ? order.paidAt.substring(0, 10) : 'No'}</td>
                 <td>{order.isDelivered ? order.deliveredAt.substring(0, 10) : 'No'}</td>
                 <td>
-                  <Button type="button" variant="light" onClick={() => {
+                  <Button type="button" onClick={() => {
                     navigate(`/order/${order._id}`);
                   }}>Details
                   </Button>
                   &nbsp;
-                  <Button type="button" variant="light" onClick={() => refundHandler(order)}>Refund
+                  <Button type="button" onClick={() => refundHandler(order)}>Refund
                   </Button>
                 </td>
               </tr>
