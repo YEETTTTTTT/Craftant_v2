@@ -48,6 +48,60 @@ userRouter.get(
 )
 
 userRouter.get(
+  '/:shop/performance',
+  expressAsyncHandler( async (req, res) => {
+    const user = await User.findOne({shop: req.params.shop});
+
+    const productSales = await Product.aggregate([
+      {
+        $match: { shop: req.params.shop }
+      },
+      {
+        $group: {
+          _id: null,
+          numSales: { $sum: '$sales'},
+          totalRevenue: { $sum: '$revenue'},
+        },
+      },
+    ]);
+
+    const numListings = await Product.countDocuments({ shop: req.params.shop });
+
+    const averageReviews = await Product.aggregate([
+      {
+        $match: { $and: [ { shop: req.params.shop }, { numReviews: { $gte: 1 } } ] },
+      },
+      {
+        $group: {
+          _id: null,
+          average: { $avg: '$rating' },
+        },
+      },
+    ]);
+
+    if (user) {
+      res.send({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        shop: user.shop,
+        userRole: user.userRole,
+        description: user.description,
+        logo: user.logo,
+        handmade: user.handmade,
+        money: user.money,
+        numListings: numListings,
+        averageReviews: averageReviews,
+        numSales: productSales,
+      });
+    } else {
+      res.status(404).send({message: "User not Found"});
+    }
+  })
+)
+
+
+userRouter.get(
   '/buyer/:id',
   expressAsyncHandler(async(req, res) => {
     const user = await User.findById(req.params.id);

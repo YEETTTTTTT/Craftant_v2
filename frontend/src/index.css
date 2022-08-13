@@ -189,8 +189,9 @@ Form {
 }
 
 @import url('https://fonts.googleapis.com/css?family=Lato:400,700');
-.user-card {
-  height: 400px;
+
+.badge-row {
+  margin-bottom: 5%;
 }
 
 #check-review {
@@ -204,6 +205,19 @@ Form {
 
 .star {
   color: #ffc000;
+}
+
+.five-star {
+  color: orange;
+
+}
+
+.crown {
+  color: gold;
+}
+
+.hold-heart {
+  color: lightred;
 }
 
 .card-img-top {

@@ -63,7 +63,7 @@ export default function SellerScreen() {
       dispatch({type: 'FETCHUSER_REQUEST'});
       try {
         const user = await axios.get(
-          `/api/users/${shop}`,
+          `/api/users/${shop}/performance`,
         );
         dispatch({type: 'FETCHUSER_SUCCESS', payload: user.data});
       } catch(err) {
@@ -109,9 +109,35 @@ export default function SellerScreen() {
                 {user.handmade === true ? (
                   <i className="fas fa-star star"><h4>Verified Handmade!</h4></i>
                 ) : (
-                  <h5>No Badges Yet...</h5>
+                  <h5>Unverified</h5>
                 )}
                 <hr/>
+                <Row>
+                {user?.averageReviews?.length > 0 && user.averageReviews[0].average === 5 ? (
+                  <Col>
+                    <i className="fa-solid fa-ranking-star fa-lg five-star"></i>
+                  </Col>
+                ) : (
+                  null
+                )}
+
+                {user?.numSales?.length > 0 && user.numSales[0].numSales > 50 ? (
+                  <Col>
+                    <i className="fa-solid fa-crown fa-lg crown"></i>
+                  </Col>
+                ) : (
+                  null
+                )}
+
+                {user?.numListings > 2 ? (
+                  <Col>
+                    <i className="fa-solid fa-hand-holding-heart fa-lg hold-heart"></i>
+                  </Col>
+                ) : (
+                  null
+                )}
+                </Row>
+                <hr />
                 <Card.Text>
                   <Rating numReviews={sumReviews} rating={avgRating}/>
                 </Card.Text>

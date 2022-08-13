@@ -15,6 +15,9 @@ const userSchema = new mongoose.Schema(
     favourites: [
         { type: String, unique: true },
     ],
+    averageReviews: { type: Number, default: 0 },
+    numListings: { type: Number, default: 0 },
+    numSales: { type: Number, default: 0 },
   },
   {
     timestamps: true
