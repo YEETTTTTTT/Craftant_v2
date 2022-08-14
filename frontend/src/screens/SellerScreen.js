@@ -145,7 +145,7 @@ export default function SellerScreen() {
             </Card>
           </Col>
           <Col>
-            <Row>
+            <Row className="products-seller-row">
               {products.filter(isShop).map((product) => (
                 <Col key={product.slug} sm={12} md={6} lg={4} className="mb-3">
                   <Product product={product}></Product>

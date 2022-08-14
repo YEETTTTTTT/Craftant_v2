@@ -20,7 +20,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-image: linear-gradient(to top, #f9f4ef 0%, #fff9ec 100%);
   color:hsl(0, 100%, 74%);
+}
 
+.products-seller-row {
+  margin-top: 20px;
 }
 
 .fa-times-circle {
