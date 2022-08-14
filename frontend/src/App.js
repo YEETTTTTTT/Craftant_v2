@@ -88,7 +88,7 @@ function App() {
                 <SearchBox />
                 <Nav className="me-auto w-100 justify-content-end">
                 {userInfo && userInfo.userRole === 'buyer' ? (
-                  <Link to="/cart" className="nav-link">
+                  <Link to="/cart" className="nav-link" id="cart">
                     Cart
                     {cart.cartItems.length > 0 && (
                       <Badge pill bg="danger">

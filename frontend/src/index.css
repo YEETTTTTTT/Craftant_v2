@@ -157,6 +157,11 @@ Form {
   border: 1px solid var(--border-color);
 }
 
+.product-card {
+  border: 1px solid var(--border-color);
+  height: 550px;
+}
+
 #card-2 {
   min-height: 20%;
   max-height: 100%;
@@ -187,6 +192,13 @@ Form {
   font-weight: bold;
 }
 
+#order-card {
+  min-height: fit-content;
+}
+
+#cart {
+  color: white; 
+}
 .input-group {
   border-color:hsl(266, 100%, 64%);
 }
@@ -256,10 +268,6 @@ Form {
 }
 .img-large {
   max-width: 100%;
-}
-
-.product-card {
-  height: 550px;
 }
 
 .seller-logo {

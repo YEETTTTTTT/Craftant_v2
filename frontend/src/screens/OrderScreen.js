@@ -129,7 +129,7 @@ export default function OrderScreen() {
         <h1 className="my-3 della-font-headers">Order #{orderId}</h1>
         <Row>
           <Col md={8}>
-            <Card className="mb-3">
+            <Card className="mb-3" id="order-card">
               <Card.Body>
                 <Card.Title>Shipping</Card.Title>
                 <Card.Text>
@@ -145,7 +145,7 @@ export default function OrderScreen() {
                 )}
               </Card.Body>
             </Card>
-            <Card className="mb-3">
+            <Card className="mb-3" id="order-card">
               <Card.Body>
                 <Card.Title>Payment</Card.Title>
                 <Card.Text>
@@ -158,7 +158,7 @@ export default function OrderScreen() {
                 )}
               </Card.Body>
             </Card>
-            <Card className="mb-3">
+            <Card className="mb-3" id="order-card">
               <Card.Body>
                 <Card.Title>Items</Card.Title>
                 <ListGroup variant="flush">
@@ -182,7 +182,7 @@ export default function OrderScreen() {
             </Card>
           </Col>
           <Col md={4}>
-            <Card className="mb-3">
+            <Card className="mb-3" id="order-card">
               <Card.Body>
                 <Card.Title>Order Summary</Card.Title>
                 <ListGroup variant="flush">

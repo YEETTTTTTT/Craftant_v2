@@ -31,7 +31,7 @@ function Request(props) {
   };
 
   return (
-    <Card className="product-card" style={{border: "1px solid grey"}}>
+    <Card className="product-card">
       <Link to={`/buyer/request/page/${product._id}`}>
         <img src={product.image} className="card-img-top" alt={product.name} />
       </Link>
