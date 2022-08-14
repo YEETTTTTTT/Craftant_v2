@@ -159,7 +159,6 @@ Form {
 
 .product-card {
   border: 1px solid var(--border-color);
-  height: 550px;
 }
 
 #card-2 {
